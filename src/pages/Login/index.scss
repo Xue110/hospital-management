@@ -1,0 +1,76 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  height: 100vh;
+
+}
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-image: url('../../assets/image/bg1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: #f5f5f5;
+  position: relative;
+  overflow: hidden;
+  .login-content{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+h1{
+  font-size: 32px;
+  color: #2c3e50;
+  margin-bottom: 40px;
+  text-align: center;
+  font-family: 楷体;
+}
+.ant-form-item {
+  margin-bottom: 16px;
+}
+
+.ant-btn {
+  background-color: #3498db;
+  border-color: #3498db;
+  border-radius: 5px;
+  font-size: 16px;
+  height: 40px;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: #2980b9;
+    border-color: #2980b9;
+  }
+}
+
+.ant-checkbox-wrapper {
+  color: #2c3e50;
+  margin-left: 10px;
+
+  &:hover {
+    color: #3498db;
+  }
+}
+
+.link {
+  color: #3498db;
+  font-weight: bold;
+  text-decoration: none;
+  margin-left: 210px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

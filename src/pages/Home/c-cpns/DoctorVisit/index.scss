@@ -1,0 +1,59 @@
+.doctor-visit {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+  }
+  
+  h3 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .table-container {
+    max-height: 400px; /* 设置表格最大高度，可以自动滚动 */
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+  
+  .doctor-table {
+    width: 600px; /* 使表格自适应父容器宽度 */
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  
+  .doctor-table th, .doctor-table td {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .doctor-table th {
+    background-color: #4CAF50;
+    color: white;
+    position: sticky; /* 固定表头 */
+    top: 0; /* 向上对齐 */
+    z-index: 1; /* 保证表头在其他内容之上 */
+    border-top: 1px solid #ddd;
+  }
+  
+  .doctor-table td {
+    background-color: #f9f9f9;
+  }
+  
+  .doctor-table tr:hover {
+    background-color: #f1f1f1;
+  }
+  
+  .doctor-table td:first-child, .doctor-table th:first-child {
+    border-left: 1px solid #ddd;
+  }
+  
+  .doctor-table td:last-child, .doctor-table th:last-child {
+    border-right: 1px solid #ddd;
+  }
+  

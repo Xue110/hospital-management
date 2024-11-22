@@ -1,0 +1,40 @@
+.count-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+    height: 130px;
+    min-width: 300px;
+    background: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  
+    .header {
+      display: flex;
+      height: 38px;
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.45);
+      background-color: white;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+  
+    .content {
+      display: flex;
+      margin-left: 0px;
+      font-size: 26px;
+      color: rgba(0, 0, 0, 0.85);
+      flex: 1;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+    }
+  
+    .footer {
+      display: flex;
+      height: 38px;
+      line-height: 38px;
+      font-size: 14px;
+      letter-spacing: 1px;
+      color: rgba(0, 0, 0, 0.85);
+      border-top: 1px solid #f0f0f0;
+    }
+  }

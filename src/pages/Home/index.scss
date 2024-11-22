@@ -1,0 +1,9 @@
+.home{
+  padding: 0 5px;
+}
+.content{
+    display: flex;
+    flex-wrap: wrap; // 允许换行
+    justify-content: space-around; // 在水平方向上均匀分布
+    gap: 20px; // 设置每个组件之间的间距
+}

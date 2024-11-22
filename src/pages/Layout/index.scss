@@ -1,0 +1,88 @@
+body, html {
+  height: 100%;
+  overflow: auto; /* 或者设置为scroll，确保总是显示滚动条 */
+}
+
+.ant-layout {
+  min-height: 100vh;
+  overflow: auto;  /* 确保页面内容能滚动 */
+}
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px;
+  color: #fff;
+  background-color: rgb(0, 21, 41);
+  cursor: pointer;
+}
+.logo:hover img {
+  transform: rotate(360deg);
+}
+.logo img {
+  transition: all 0.3s ease;
+}
+.logo h2 {
+  margin-right: 38px;
+}
+.layout-content {
+  height: calc(100vh - 64px);
+  overflow-y: auto;
+}
+.header {
+  background: rgb(0, 21, 41);
+  padding: 40;
+}
+.welcome {
+  position: relative;
+  left: 0;
+  top: 0;
+  color: #fff;
+  .welcome-text {
+    margin-left: 20px;
+  }
+}
+.user-info {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding-right: 20px;
+  color: #fff;
+  .user-name {
+    margin-right: 20px;
+  }
+
+  .user-logout {
+    display: inline-block;
+    cursor: pointer;
+  }
+}
+/* 容器居中加载动画 */
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 居中对齐 */
+}
+
+/* 创建旋转的加载指示器 */
+.spinner {
+  border: 8px solid #f3f3f3; /* 浅灰色背景 */
+  border-top: 8px solid #3498db; /* 蓝色顶部边框 */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite; /* 设置旋转动画 */
+}
+
+/* 旋转动画 */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
