@@ -65,8 +65,8 @@ const App: React.FC = () => {
   const [breadcrumbItems, setBreadcrumbItems] = useState<string[]>(['首页']);
   const [items, setItems] = useState<MenuItem[]>([
     { key: 'home', label: '首页', icon: <HomeOutlined /> },
-    { key: 'order', label: '订单管理', icon: <AccountBookOutlined /> },
     { key: 'user', label: '用户管理', icon: <UsergroupAddOutlined /> },
+    { key: 'order', label: '订单管理', icon: <AccountBookOutlined /> },
     { key: 'Reservation', label: '预约记录', icon: <BellOutlined /> },
     { key: 'Scheduling', label: '医生排班管理', icon: <CalendarOutlined /> },
     { key: 'Workforce', label: '医院排班管理', icon: <CalendarOutlined /> },
