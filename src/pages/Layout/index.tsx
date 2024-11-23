@@ -5,6 +5,7 @@ import {
   AccountBookOutlined,
   BellOutlined,
   CalendarOutlined,
+  ExperimentOutlined,
   FireOutlined,
   FormOutlined,
   HeartOutlined,
@@ -92,6 +93,7 @@ const App: React.FC = () => {
           icon: <RocketOutlined />,
         },
         { key: 'hospital/Register', label: '挂号记录', icon: <PhoneOutlined /> },
+        { key: 'hospital/medical', label: '药品管理', icon: <ExperimentOutlined /> },
       ],
     },
     {
@@ -178,6 +180,7 @@ const App: React.FC = () => {
       'hospital/hospitalInfo': ['首页', '医院管理', '医院信息'],
       'hospital/inhospital': ['首页', '医院管理', '住院管理'],
       'hospital/Register': ['首页', '医院管理', '挂号记录'],
+      'hospital/medical': ['首页', '医院管理', '药品管理'],
       'patent/medicine': ['首页', '患者管理', '药品处方'],
       'patent/charge': ['首页', '患者管理', '收费记录'],
       'patent/consultation': ['首页', '患者管理', '就诊记录'],
