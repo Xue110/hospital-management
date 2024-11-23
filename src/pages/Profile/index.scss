@@ -1,0 +1,30 @@
+.profile {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  
+    .ant-form-item {
+      margin-bottom: 20px;
+    }
+  
+    .ant-btn {
+      font-size: 16px;
+    }
+  
+    .ant-form-item-label {
+      font-weight: 500;
+      color: #333;
+    }
+  
+    .ant-form-item-control-input {
+      border-radius: 5px;
+    }
+  
+    .ant-spin {
+      text-align: center;
+    }
+  }
+  

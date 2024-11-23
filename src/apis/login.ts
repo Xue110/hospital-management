@@ -4,7 +4,7 @@ import { request } from "../utils"
 //登录接口
 export const loginAPI = (formData:LoginAction) =>{
     return request({
-        url: "/login",
+        url: "/admin/admin/login",
         method: "POST",
         data:formData
     })
@@ -19,8 +19,9 @@ export const resetPasswordAPI = (formData:ForgetPasswordAction) =>{
 }
 // 获取个人信息
 export const getProfileAPI = () =>{
+    const userId = localStorage.getItem("id")
     return request({
-        url: "/profile",
+        url: `/profile/${userId}`,
         method: "GET",
     })  
 }

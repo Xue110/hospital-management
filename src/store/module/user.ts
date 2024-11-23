@@ -46,9 +46,11 @@ const fetchLogin = (loginForm: LoginAction) => {
       // 1. 异步请求
       const res = await loginAPI(loginForm);
       // 检查返回的状态是否成功（根据 API 的实际返回结构来判断）
-      if (res.code === 200) {
+      if (res.code == 200) {
         // 2. 提交同步action进行token的存入
         dispatch(updateToken(res.data.token));
+        localStorage.setItem('id', res.data.id)
+        localStorage.setItem('username', res.data.username)
         message.success('登录成功');
       } else {
         message.error('登录失败,请检查用户名和密码是否正确');
