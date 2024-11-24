@@ -30,7 +30,7 @@ import { clearUserInfo, fetchUserInfo } from '../../store/module/user';
 import CurrentTime from './Cite/currentTime';
 import { AppDispatch } from '../../type/login';
 import { getPathAPI } from '../../apis/layout';
-import logo from '../../assets/image/logo.png'
+import logo from '../../assets/image/logo.png';
 const { Header, Content, Sider } = Layout;
 
 // 扩展 Menu.Item 类型来支持 path 属性
@@ -59,6 +59,49 @@ function getItem(
   };
 }
 console.log(getItem);
+// 图标映射表
+const iconMap: { [key: string]: React.ReactNode } = {
+  home: <HomeOutlined />,
+  user: <UsergroupAddOutlined />,
+  order: <AccountBookOutlined />,
+  reservation: <BellOutlined />,
+  scheduling: <CalendarOutlined />,
+  workforce: <CalendarOutlined />,
+  hospital: <HeartOutlined />,
+  fire: <FireOutlined />,
+  department: <InsertRowBelowOutlined />,
+  doctor: <RobotOutlined />,
+  inhospital: <RocketOutlined />,
+  register: <PhoneOutlined />,
+  medical: <ExperimentOutlined />,
+  patent: <PieChartOutlined />,
+  medicine: <MedicineBoxOutlined />,
+  charge: <PayCircleOutlined />,
+  consultation: <SolutionOutlined />,
+  details: <SmileOutlined />,
+  examination: <FormOutlined />,
+  xxx: <ScheduleOutlined />,
+  profile: <UserOutlined />,
+};
+// 递归映射菜单项
+
+const mapIcons = (items: MenuItem[]): MenuItem[] => {
+  return items.map(item => {
+    const { icon, children, ...rest } = item;
+    let mappedIcon = icon;
+
+    // 如果icon是字符串类型才进行处理
+    if (typeof icon === 'string') {
+      mappedIcon = iconMap[icon.toLowerCase()] || icon; // 根据icon映射表获取图标
+    }
+
+    return {
+      ...rest,
+      icon: mappedIcon,
+      children: children ? mapIcons(children) : undefined, // 递归处理子菜单
+    };
+  });
+};
 
 const App: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -92,8 +135,16 @@ const App: React.FC = () => {
           label: '住院管理',
           icon: <RocketOutlined />,
         },
-        { key: 'hospital/Register', label: '挂号记录', icon: <PhoneOutlined /> },
-        { key: 'hospital/medical', label: '药品管理', icon: <ExperimentOutlined /> },
+        {
+          key: 'hospital/Register',
+          label: '挂号记录',
+          icon: <PhoneOutlined />,
+        },
+        {
+          key: 'hospital/medical',
+          label: '药品管理',
+          icon: <ExperimentOutlined />,
+        },
       ],
     },
     {
@@ -106,14 +157,22 @@ const App: React.FC = () => {
           label: '药品处方',
           icon: <MedicineBoxOutlined />,
         },
-        { key: 'patent/charge', label: '收费记录', icon: <PayCircleOutlined /> },
+        {
+          key: 'patent/charge',
+          label: '收费记录',
+          icon: <PayCircleOutlined />,
+        },
         {
           key: 'patent/consultation',
           label: '就诊记录',
           icon: <SolutionOutlined />,
         },
         { key: 'patent/details', label: '患者信息', icon: <SmileOutlined /> },
-        { key: 'patent/examination', label: '医疗检查', icon: <FormOutlined /> },
+        {
+          key: 'patent/examination',
+          label: '医疗检查',
+          icon: <FormOutlined />,
+        },
         {
           key: 'patent/HealthRecord',
           label: '健康档案',
@@ -127,11 +186,20 @@ const App: React.FC = () => {
       icon: <UserOutlined />,
     },
   ]);
+  // 遍历数组，并移除 children 为空的属性
+  items.forEach((item) => {
+    if (item.children?.length === 0) {
+      delete item.children; // 删除 children 属性
+    }
+  });
+  // 映射图标
+  const mappedItems = mapIcons(items);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
   const {
     token: { borderRadiusLG },
   } = theme.useToken();
+
   // 从 localStorage 或 sessionStorage 恢复路由状态
   useEffect(() => {
     const savedPath = localStorage.getItem('currentPath');
@@ -201,9 +269,9 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchPath = async () => {
       const res = await getPathAPI(userInfo.roleId);
-      setItems(res.data)
+      setItems(res.data);
     };
-    fetchPath()
+    fetchPath();
   }, [userInfo.roleId]);
   if (!items || items.length === 0 || !userInfo) {
     return (
@@ -216,7 +284,7 @@ const App: React.FC = () => {
     dispatch(clearUserInfo());
     navigate('/login');
   };
-  const name = userInfo.name || '未登录';
+  const name = userInfo.username || '未登录';
   return (
     <Layout style={{ minHeight: '100vh', minWidth: '100vw', overflow: 'auto' }}>
       <Sider
@@ -241,7 +309,7 @@ const App: React.FC = () => {
           theme="dark"
           defaultSelectedKeys={['/home']}
           mode="inline"
-          items={items}
+          items={mappedItems}
           selectedKeys={[currentPath]}
           onClick={onMenuItemClick}
         />

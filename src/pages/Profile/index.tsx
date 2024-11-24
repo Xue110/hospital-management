@@ -84,6 +84,9 @@ const Profile = () => {
           onFinishFailed={() => message.error('提交失败，请检查填写的内容')}
           {...formLayout}
         >
+          <Form.Item label="用户ID" name="id">
+            <Input type="text" disabled />
+          </Form.Item>
           <Form.Item
             label="用户名"
             name="username"

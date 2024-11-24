@@ -1,5 +1,5 @@
 import './index.scss';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Button,
   Card,
@@ -34,7 +34,7 @@ interface DataType {
   phone: string;
   email: string;
   address: string;
-  creatdTime: string;
+  createTime: string;
   updateTime: string;
 }
 const role = {
@@ -66,6 +66,7 @@ const User: React.FC = () => {
     {
       title: '身份证号',
       dataIndex: 'identityCard',
+      render: (text) => (text ? text : '未填写'), // 如果为空显示 "未填写"
     },
     {
       title: '电话',
@@ -78,10 +79,11 @@ const User: React.FC = () => {
     {
       title: '地址',
       dataIndex: 'address',
+      render: (text) => (text ? text : '未填写'), // 如果为空显示 "未填写"
     },
     {
       title: '创建时间',
-      dataIndex: 'creatdTime',
+      dataIndex: 'createTime',
     },
     {
       title: '更新时间',
@@ -130,22 +132,20 @@ const User: React.FC = () => {
       },
     },
   ];
-  const confirm = async(data: DataType) => {
+  const confirm = async (data: DataType) => {
     console.log(data);
-    const res = await deleteUserById(data.id)
+    const res = await deleteUserById(data.id);
     if (res.code === 200) {
       message.success('删除成功');
       await fetchData(pagination.current, pagination.pageSize);
     } else {
       message.error('删除失败');
     }
-  }; 
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  };
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
   });
-  const [deleteId,setDeleteId] = useState<number[]>([])
   // 表单控件数据
   const [form] = Form.useForm();
   const [dataSource, setDataSource] = useState<DataType[]>(
@@ -158,16 +158,18 @@ const User: React.FC = () => {
       phone: '1234567890',
       email: '1234567890@qq.com',
       address: '1234567890',
-      creatdTime: '2022-12-12',
+      createTime: '2022-12-12',
       updateTime: '2022-12-12',
     }))
   );
   const [total, setTotal] = useState(dataSource.length);
   const [openStatus, setOpenStatus] = useState(0);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const onSelectChange = (newSelectedRowKeys: React.Key[]) => {
     console.log('selectedRowKeys changed: ', newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
+
   const rowSelection: TableRowSelection<DataType> = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -175,10 +177,9 @@ const User: React.FC = () => {
       Table.SELECTION_ALL,
       Table.SELECTION_INVERT,
       Table.SELECTION_NONE,
-      // 自定义选择项
       {
         key: 'odd',
-        text: '选择单数项',
+        text: 'Select Odd Row',
         onSelect: (changeableRowKeys) => {
           let newSelectedRowKeys = [];
           newSelectedRowKeys = changeableRowKeys.filter((_, index) => {
@@ -192,7 +193,7 @@ const User: React.FC = () => {
       },
       {
         key: 'even',
-        text: '选择双数项',
+        text: 'Select Even Row',
         onSelect: (changeableRowKeys) => {
           let newSelectedRowKeys = [];
           newSelectedRowKeys = changeableRowKeys.filter((_, index) => {
@@ -211,22 +212,23 @@ const User: React.FC = () => {
     pageSize: number,
     filters: any = {}
   ) => {
+    console.log(filters)
     const res = await getUserList(current, pageSize, filters);
-    setDataSource(res.data.list); // 更新数据源
-    setTotal(res.data.total);
+    setDataSource(res.data.records); // 更新数据源
+    setTotal(res.data.total); // 更新数据总数
   };
-  // 获取数据
   useEffect(() => {
-    fetchData(pagination.current, pagination.pageSize); // 调用获取数据的函数
-  }, [pagination.current, pagination.pageSize]); // 依赖项
+    fetchData(pagination.current, pagination.pageSize);
+  }, []);
   // 处理分页变更
-  const handleTableChange = (pagination: any) => {
+  const handleTableChange = async (pagination: any) => {
     const { current, pageSize } = pagination;
     // 更新分页状态
     setPagination({
       current,
       pageSize,
     });
+    await fetchData(pagination.current, pagination.pageSize);
   };
   // 查询按钮点击
   const handleSearch = () => {
@@ -249,24 +251,34 @@ const User: React.FC = () => {
   const handleClick = () => {
     setOpenStatus(openStatus + 1);
   };
-  //批量删除
+  // 批量删除
   const handleDelete = async () => {
     if (selectedRowKeys.length > 0) {
-      const selectedRows = dataSource.filter(row => selectedRowKeys.includes(row.id));
-      setDeleteId(selectedRows.map(row => row.id))
-      const res = await deleteUser(deleteId);
+      // 获取需要删除的行
+      const selectedRows = dataSource.filter((row) =>
+        selectedRowKeys.includes(row.id)
+      );
+      // 提取出需要删除的 ID
+      const idsToDelete = selectedRows.map((row) => row.id);
+      const res = await deleteUser(idsToDelete);
       if (res.code === 200) {
         message.success('删除成功');
+        // 删除成功后，根据当前分页重新获取数据
         await fetchData(pagination.current, pagination.pageSize);
+        // 清空选中的行
         setSelectedRowKeys([]);
       } else {
         message.error('删除失败');
       }
     }
-  }
+  };
+  // 使用 useCallback 缓存 fetchData 函数的引用
+  const refresh = useCallback(() => {
+    fetchData(pagination.current, pagination.pageSize);
+  }, [pagination.current, pagination.pageSize]);
   return (
     <div>
-      <UserInfo open={openStatus} refresh={fetchData(pagination.current, pagination.pageSize)} />
+      <UserInfo open={openStatus} refresh={refresh} />
       <Card style={{ width: '100%' }}>
         <Form form={form} layout="inline">
           <Row justify="space-between" style={{ width: '100%' }}>
@@ -288,10 +300,10 @@ const User: React.FC = () => {
             <Col span={7}>
               <Form.Item name="roleId" label="角色">
                 <Select placeholder="请选择角色">
-                  <Select.Option value="1">管理员</Select.Option>
-                  <Select.Option value="2">医院</Select.Option>
-                  <Select.Option value="3">医生</Select.Option>
-                  <Select.Option value="4">普通用户</Select.Option>
+                  <Select.Option value={1}>管理员</Select.Option>
+                  <Select.Option value={2}>医院</Select.Option>
+                  <Select.Option value={3}>医生</Select.Option>
+                  <Select.Option value={4}>普通用户</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
@@ -353,6 +365,7 @@ const User: React.FC = () => {
           rowSelection={rowSelection}
           columns={columns}
           dataSource={dataSource}
+          rowKey="id"
           pagination={{
             current: pagination.current,
             pageSize: pagination.pageSize,

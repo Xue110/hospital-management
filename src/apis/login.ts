@@ -12,7 +12,7 @@ export const loginAPI = (formData:LoginAction) =>{
 //重置密码接口
 export const resetPasswordAPI = (formData:ForgetPasswordAction) =>{
     return request({
-        url: "/resetPassword",
+        url: "/admin/resetPassword",
         method: "POST",
         data:formData
     })
@@ -21,7 +21,7 @@ export const resetPasswordAPI = (formData:ForgetPasswordAction) =>{
 export const getProfileAPI = () =>{
     const userId = localStorage.getItem("id")
     return request({
-        url: `/profile/${userId}`,
+        url: `/admin/profile/${userId}`,
         method: "GET",
     })  
 }

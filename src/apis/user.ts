@@ -5,7 +5,7 @@ import { request } from "../utils";
 export const getUserList = (current: number, pageSize: number,filters:any) => {
   return request({
     url: "/admin/userInfo/limit",
-    method: "GET",
+    method: "POST",
     data: {
         page: current,
         pageSize,

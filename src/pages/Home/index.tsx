@@ -16,9 +16,11 @@ import DoctorVisit from './c-cpns/DoctorVisit';
 import PatientCount from './c-cpns/PatientCount';
 import ZhuYuan from './c-cpns/zhuyuan';
 import GuaHao from './c-cpns/GuaHao';
-import { getHospitalCount, getPermission } from '../../apis/home';
+import { getHospitalCount } from '../../apis/home';
+import { getProfileAPI } from '../../apis/login';
 const Home = () => {
   const [showEcharts, setShowEcharts] = useState(1);
+  const [roleId, setRoleId] = useState(1);
   const [information, setInformation] = useState({
     hospitalNum: 8,
     doctorNum: 77,
@@ -27,24 +29,24 @@ const Home = () => {
     bedNum: 888,
   });
   useEffect(() => {
-    const fetchData = async() =>{
-      const res = await getPermission()
+    const fetchData = async () => {
+      const res = await getProfileAPI();
       setShowEcharts(res.data.roleId);
-    }
-    const fetchInformation = async()=>{
-      const res = await getHospitalCount()
-      setInformation(res.data)
-    }
-    fetchData()
-    fetchInformation()
-  },[]);
-  const roleId = 1; // 1:管理员 2:医院 3:医生
+      setRoleId(res.data.roleId);
+    };
+    const fetchInformation = async () => {
+      const res = await getHospitalCount();
+      setInformation(res.data);
+    };
+    fetchData();
+    fetchInformation();
+  }, []);
   const roleNames = {
     1: '管理员',
     2: '医院',
     3: '医生',
   };
-  const roleName = roleNames[roleId];
+  const roleName = roleNames[roleId as 1 | 2 | 3];
   return (
     <div className="home">
       <h1>吉诊宝-综合医疗服务平台-{roleName}后台管理系统</h1>
@@ -87,7 +89,7 @@ const Home = () => {
           {/* 今日挂号人数 */}
           <RegisterCount registerNum={information.registerNum} />
           {/* 患者人数 */}
-          <PatientCount/>
+          <PatientCount />
           {/* 住院人数 */}
           <ZhuYuan />
           {/* 患者流量趋势 */}

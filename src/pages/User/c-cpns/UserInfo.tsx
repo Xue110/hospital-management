@@ -33,9 +33,6 @@ const UserInfo = (props: any) => {
       } else {
         message.error('添加失败');
       }
-    } catch (error) {
-      // 如果表单验证失败
-      message.error('请检查表单输入');
     } finally {
       setLoading(false); // 请求完成后恢复按钮状态
     }
@@ -91,7 +88,6 @@ const UserInfo = (props: any) => {
           <Form.Item
             label="身份证号"
             name="identityCard"
-            rules={[{ required: true, message: '请输入身份证号' }]}
           >
             <Input type="text" />
           </Form.Item>
