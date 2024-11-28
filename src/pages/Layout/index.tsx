@@ -86,7 +86,7 @@ const iconMap: { [key: string]: React.ReactNode } = {
 // 递归映射菜单项
 
 const mapIcons = (items: MenuItem[]): MenuItem[] => {
-  return items.map(item => {
+  return items.map((item) => {
     const { icon, children, ...rest } = item;
     let mappedIcon = icon;
 
@@ -107,89 +107,15 @@ const App: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [currentPath, setCurrentPath] = useState<string>('/home');
   const [breadcrumbItems, setBreadcrumbItems] = useState<string[]>(['首页']);
-  const [items, setItems] = useState<MenuItem[]>([
-    { key: 'home', label: '首页', icon: <HomeOutlined /> },
-    { key: 'user', label: '用户管理', icon: <UsergroupAddOutlined /> },
-    { key: 'order', label: '订单管理', icon: <AccountBookOutlined /> },
-    { key: 'Reservation', label: '预约记录', icon: <BellOutlined /> },
-    { key: 'Scheduling', label: '医生排班管理', icon: <CalendarOutlined /> },
-    { key: 'Workforce', label: '医院排班管理', icon: <CalendarOutlined /> },
-    {
-      key: 'hospital',
-      label: '医院管理',
-      icon: <HeartOutlined />,
-      children: [
-        {
-          key: 'hospital/hospitalInfo',
-          label: '医院信息',
-          icon: <FireOutlined />,
-        },
-        {
-          key: 'hospital/department',
-          label: '科室管理',
-          icon: <InsertRowBelowOutlined />,
-        },
-        { key: 'hospital/doctor', label: '医生管理', icon: <RobotOutlined /> },
-        {
-          key: 'hospital/inhospital',
-          label: '住院管理',
-          icon: <RocketOutlined />,
-        },
-        {
-          key: 'hospital/Register',
-          label: '挂号记录',
-          icon: <PhoneOutlined />,
-        },
-        {
-          key: 'hospital/medical',
-          label: '药品管理',
-          icon: <ExperimentOutlined />,
-        },
-      ],
-    },
-    {
-      key: 'patent',
-      label: '患者管理',
-      icon: <PieChartOutlined />,
-      children: [
-        {
-          key: 'patent/medicine',
-          label: '药品处方',
-          icon: <MedicineBoxOutlined />,
-        },
-        {
-          key: 'patent/charge',
-          label: '收费记录',
-          icon: <PayCircleOutlined />,
-        },
-        {
-          key: 'patent/consultation',
-          label: '就诊记录',
-          icon: <SolutionOutlined />,
-        },
-        { key: 'patent/details', label: '患者信息', icon: <SmileOutlined /> },
-        {
-          key: 'patent/examination',
-          label: '医疗检查',
-          icon: <FormOutlined />,
-        },
-        {
-          key: 'patent/HealthRecord',
-          label: '健康档案',
-          icon: <ScheduleOutlined />,
-        },
-      ],
-    },
-    {
-      key: 'profile',
-      label: '个人信息',
-      icon: <UserOutlined />,
-    },
-  ]);
+  const [items, setItems] = useState<MenuItem[]>([]);
   // 遍历数组，并移除 children 为空的属性
   items.forEach((item) => {
     if (item.children?.length === 0) {
       delete item.children; // 删除 children 属性
+    } else if (item.children) {
+      item.children.forEach((child) => {
+        if (child.children?.length === 0) delete child.children;
+      });
     }
   });
   // 映射图标
@@ -222,7 +148,6 @@ const App: React.FC = () => {
 
   // 菜单点击事件
   const onMenuItemClick = (e: any) => {
-    console.log(e);
     const path = e.key;
     setCurrentPath(e.key); // 更新当前选中的菜单项 key
     // 更新面包屑
@@ -230,6 +155,7 @@ const App: React.FC = () => {
     localStorage.setItem('currentPath', e.key); // 保存当前路径到 localStorage
     setBreadcrumbItems(breadcrumbList);
     // 跳转到对应的路由
+    console.log(path)
     navigate(`/${path}`);
     updateBreadcrumb(e.key); // 更新面包屑
   };
@@ -237,25 +163,25 @@ const App: React.FC = () => {
   // 根据菜单的path生成面包屑内容
   const generateBreadcrumb = (path: string): string[] => {
     const breadcrumbMap: Record<string, string[]> = {
-      home: ['首页'],
-      order: ['首页', '订单管理'],
-      user: ['首页', '用户管理'],
-      Reservation: ['首页', '预约管理'],
-      Scheduling: ['首页', '医生排班管理'],
-      Workforce: ['首页', '医院排班管理'],
-      'hospital/department': ['首页', '医院管理', '科室管理'],
-      'hospital/doctor': ['首页', '医院管理', '医生管理'],
-      'hospital/hospitalInfo': ['首页', '医院管理', '医院信息'],
-      'hospital/inhospital': ['首页', '医院管理', '住院管理'],
-      'hospital/Register': ['首页', '医院管理', '挂号记录'],
-      'hospital/medical': ['首页', '医院管理', '药品管理'],
-      'patent/medicine': ['首页', '患者管理', '药品处方'],
-      'patent/charge': ['首页', '患者管理', '收费记录'],
-      'patent/consultation': ['首页', '患者管理', '就诊记录'],
-      'patent/details': ['首页', '患者管理', '患者信息'],
-      'patent/examination': ['首页', '患者管理', '医疗检查'],
-      'patent/HealthRecord': ['首页', '患者管理', '健康档案'],
-      profile: ['首页', '个人信息'],
+      'admin/home': ['首页'],
+      '/admin/order': ['首页', '订单管理'],
+      '/admin/user': ['首页', '用户管理'],
+      '/admin/Reservation': ['首页', '预约管理'],
+      '/admin/Scheduling': ['首页', '医生排班管理'],
+      '/admin/Workforce': ['首页', '医院排班管理'],
+      '/admin/hospital/department': ['首页', '医院管理', '科室管理'],
+      '/admin/hospital/doctor': ['首页', '医院管理', '医生管理'],
+      '/admin/hospital/info': ['首页', '医院管理', '医院信息'],
+      '/admin/hospital/inpatient': ['首页', '医院管理', '住院管理'],
+      '/admin/hospital/Registregistrationer': ['首页', '医院管理', '挂号记录'],
+      '/admin/hospital/medication': ['首页', '医院管理', '药品管理'],
+      '/admin/patient/prescription': ['首页', '患者管理', '药品处方'],
+      '/admin/patient/order': ['首页', '患者管理', '收费记录'],
+      '/admin/patient/registration': ['首页', '患者管理', '就诊记录'],
+      '/admin/patient/info': ['首页', '患者管理', '患者信息'],
+      '/admin/patient/report': ['首页', '患者管理', '医疗检查'],
+      '/admin/patient/medicalRecord': ['首页', '患者管理', '健康档案'],
+      '/admin/profile': ['首页', '个人信息'],
     };
     return breadcrumbMap[path] || ['首页'];
   };
@@ -265,14 +191,18 @@ const App: React.FC = () => {
   }, [dispatch]);
 
   const userInfo = useSelector((state: any) => state.user.userInfo);
-  // 获取菜单项
+
+  // 获取菜单项，确保只有在获取到 userInfo 后才执行
   useEffect(() => {
-    const fetchPath = async () => {
-      const res = await getPathAPI(userInfo.roleId);
-      setItems(res.data);
-    };
-    fetchPath();
-  }, [userInfo.roleId]);
+    if (userInfo && userInfo.roleId) {
+      const fetchPath = async () => {
+        const res = await getPathAPI(userInfo.roleId);
+        console.log(res.data);
+        setItems(res.data);
+      };
+      fetchPath();
+    }
+  }, [userInfo]);
   if (!items || items.length === 0 || !userInfo) {
     return (
       <div className="loading-container">

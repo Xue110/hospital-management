@@ -16,12 +16,12 @@ import DoctorVisit from './c-cpns/DoctorVisit';
 import PatientCount from './c-cpns/PatientCount';
 import ZhuYuan from './c-cpns/zhuyuan';
 import GuaHao from './c-cpns/GuaHao';
-import { getHospitalCount } from '../../apis/home';
+// import { getHospitalCount } from '../../apis/home';
 import { getProfileAPI } from '../../apis/login';
 const Home = () => {
   const [showEcharts, setShowEcharts] = useState(1);
   const [roleId, setRoleId] = useState(1);
-  const [information, setInformation] = useState({
+  const [information] = useState({
     hospitalNum: 8,
     doctorNum: 77,
     departmentNum: 18,
@@ -34,12 +34,12 @@ const Home = () => {
       setShowEcharts(res.data.roleId);
       setRoleId(res.data.roleId);
     };
-    const fetchInformation = async () => {
-      const res = await getHospitalCount();
-      setInformation(res.data);
-    };
+    // const fetchInformation = async () => {
+    //   const res = await getHospitalCount();
+    //   setInformation(res.data);
+    // };
     fetchData();
-    fetchInformation();
+    // fetchInformation();
   }, []);
   const roleNames = {
     1: '管理员',

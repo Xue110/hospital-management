@@ -212,7 +212,6 @@ const User: React.FC = () => {
     pageSize: number,
     filters: any = {}
   ) => {
-    console.log(filters)
     const res = await getUserList(current, pageSize, filters);
     setDataSource(res.data.records); // 更新数据源
     setTotal(res.data.total); // 更新数据总数
@@ -279,7 +278,7 @@ const User: React.FC = () => {
   return (
     <div>
       <UserInfo open={openStatus} refresh={refresh} />
-      <Card style={{ width: '100%' }}>
+      <Card style={{ width: '100%' }} title="筛选用户">
         <Form form={form} layout="inline">
           <Row justify="space-between" style={{ width: '100%' }}>
             {/* 用户ID输入框 */}

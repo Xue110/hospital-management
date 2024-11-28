@@ -23,7 +23,6 @@ const userStore = createSlice({
     },
     setUserInfo(state, action) {
       state.userInfo = action.payload;
-      console.log('Updated userInfo:', state.userInfo);
     },
     clearUserInfo(state) {
       state.token = '';
@@ -65,7 +64,6 @@ const fetchLogin = (loginForm: LoginAction) => {
 const fetchUserInfo = () => {
   return async (dispatch: AppDispatch) => {
       const res = await getProfileAPI()
-      console.log(res.data)
       dispatch(setUserInfo(res.data))
   }
 }

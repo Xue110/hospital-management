@@ -6,3 +6,10 @@ export const getPathAPI = (roleId: number) => {
         method: "GET",
     })
 }
+// 获取数据列表
+export const getLayoutAPI = () => {
+    return request({
+        url: "/admin/counts",
+        method: "GET",
+    })
+}

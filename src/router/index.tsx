@@ -69,43 +69,43 @@ const router = createBrowserRouter([
         element: <AuthRoute><Doctor /></AuthRoute>
       },
       {
-        path: '/hospital/hospitalInfo',
+        path: '/hospital/info',
         element: <AuthRoute><HospitalInfo /></AuthRoute>
       },
       {
-        path: '/hospital/inhospital',
+        path: '/hospital/inpatient',
         element: <AuthRoute><Inhospital /></AuthRoute>
       },
       {
-        path: '/hospital/Register',
+        path: '/hospital/registration',
         element: <AuthRoute><Register /></AuthRoute>
       },
       {
-        path: '/hospital/medical',
+        path: '/hospital/medication',
         element: <AuthRoute><Medical /></AuthRoute>
       },
       {
-        path: '/patent/charge',
+        path: '/patient/order',
         element: <AuthRoute><Charge /></AuthRoute>
       },
       {
-        path: '/patent/consultation',
+        path: '/patient/registration',
         element: <AuthRoute><Consultation /></AuthRoute>
       },
       {
-        path: '/patent/details',
+        path: '/patient/info',
         element: <AuthRoute><Details /></AuthRoute>
       },
       {
-        path: '/patent/examination',
+        path: '/patient/report',
         element: <AuthRoute><Examination /></AuthRoute>
       },
       {
-        path: '/patent/HealthRecord',
+        path: '/patient/medicalRecord',
         element: <AuthRoute><HealthRecords /></AuthRoute>
       },
       {
-        path: '/patent/medicine',
+        path: '/patient/prescription',
         element: <AuthRoute><Medicine /></AuthRoute>
       }
     ]
