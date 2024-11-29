@@ -59,6 +59,11 @@ const Order = () => {
     };
     const res = await getOrderList(data);
     setData(res.data.records);
+    setPagination({
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      total: res.data.total,
+    })
   };
   // 分页变更处理函数
   const handleTableChange = (pagination: any) => {
@@ -132,6 +137,14 @@ const Order = () => {
   useEffect(() => {
     getOrderInfo();
   }, []);
+    //修改分页器数据
+    const paginationCount = (() => {
+      setPagination({
+        page: pagination.page-1,
+        pageSize: pagination.pageSize,
+        total: data.length,
+      });
+    })
   return (
     <>
       <AdOrder open={open} refresh={refresh} userCounts={userCounts} patientCounts={patientCounts} layoutData={layoutData}/>
@@ -172,6 +185,7 @@ const Order = () => {
           patientCounts={patientCounts}
           hospitalCounts={hospitalCounts}
           doctorCounts={doctorCounts}
+          paginationCount={paginationCount}
         />
       </Card>
     </>

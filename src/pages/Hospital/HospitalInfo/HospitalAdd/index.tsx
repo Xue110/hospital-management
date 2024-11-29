@@ -37,9 +37,24 @@ const AdHospital = (props: any) => {
     setPreviewImage(file.url || (file.preview as string));
     setPreviewOpen(true);
   };
-
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
-    setFileList(newFileList);
+  const handleChange = (info: any) => {
+    console.log('正在上传中', info);
+    // 更新文件列表，处理上传结果
+    const updatedFileList = info.fileList.map((file: any) => {
+      if (file.status === 'done') {
+        file.thumbUrl = file.response.data; // 服务器返回的 URL
+      }
+      return file;
+    });
+    setFileList(updatedFileList);
+    // 上传完成后，弹出提示
+    if (info.file.status === 'done') {
+      message.success('上传成功');
+    } else if (info.file.status === 'error') {
+      message.error('上传失败');
+    }
+    console.log(updatedFileList); // 注意：这里的 updatedFileList 是最新的状态
+  };
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
       <PlusOutlined />
@@ -59,7 +74,7 @@ const AdHospital = (props: any) => {
         });
       }
     } else {
-      setFileList([]);
+      fileList.length = 0;
       setTitle('添加医院信息');
       form.resetFields();
     }
@@ -74,9 +89,11 @@ const AdHospital = (props: any) => {
     try {
       // 表单验证通过后
       const values = await form.validateFields();
+      values.image = fileList[0].thumbUrl;
       console.log(values);
       setLoading(true); // 开始请求时禁用按钮，显示加载状态
       if (props.info && Object.keys(props.info).length > 0) {
+        values.id = props.info.id;
         const res = await updateHospital(values);
         if (res.code === 200) {
           // 修改成功
@@ -107,6 +124,7 @@ const AdHospital = (props: any) => {
     setIsModalOpen(false);
     form.resetFields(); // 取消时重置表单
   };
+  const token = localStorage.getItem('token');
   return (
     <>
       <Modal
@@ -150,11 +168,15 @@ const AdHospital = (props: any) => {
           >
             <div>
               <Upload
-                action="https://localhost:8077/admin/upload"
+                name="image"
+                action="http://localhost:8077/admin/upload"
                 listType="picture-card"
                 fileList={fileList}
                 onPreview={handlePreview}
                 onChange={handleChange}
+                headers={{
+                  token: token!,
+                }}
               >
                 {fileList.length >= 1 ? null : uploadButton}
               </Upload>

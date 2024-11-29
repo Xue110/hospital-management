@@ -119,8 +119,24 @@ const Profile = () => {
     setPreviewOpen(true);
   };
 
-  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
-    setFileList(newFileList);
+  const handleChange = (info: any) => {
+    console.log('正在上传中', info);
+    // 更新文件列表，处理上传结果
+    const updatedFileList = info.fileList.map((file: any) => {
+      if (file.status === 'done') {
+        file.thumbUrl = file.response.data; // 服务器返回的 URL
+      }
+      return file;
+    });
+    setFileList(updatedFileList);
+    // 上传完成后，弹出提示
+    if (info.file.status === 'done') {
+      message.success('上传成功');
+    } else if (info.file.status === 'error') {
+      message.error('上传失败');
+    }
+    console.log(updatedFileList); // 注意：这里的 updatedFileList 是最新的状态
+  };
   const uploadButton = (
     <button style={{ border: 0, background: 'none' }} type="button">
       <PlusOutlined />
@@ -225,11 +241,15 @@ const Profile = () => {
             <Form.Item label="照片" name="image" rules={[{ ...rules }]}>
               <div>
                 <Upload
-                  action="https://localhost:8077/admin/upload"
+                  name="image"
+                  action="http://localhost:8077/admin/upload"
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={handlePreview}
                   onChange={handleChange}
+                  headers={{
+                    token: localStorage.getItem('token')!,
+                  }}
                 >
                   {fileList.length >= 1 ? null : uploadButton}
                 </Upload>

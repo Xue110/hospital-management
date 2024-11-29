@@ -67,13 +67,14 @@ const TableComponent = (props: any) => {
       dataIndex: 'image',
       key: 'image',
       render: (image: any) => (
-        <img src={image} alt="" style={{ width: '200px', height: '100%' }} />
+        <img src={image} alt="" style={{ width: '100%', height: '100px' }} />
       ),
     },
     {
       title: '医院地址',
       dataIndex: 'address',
       key: 'address',
+      width: '170px',
     },
     {
       title: '医院电话',
@@ -143,7 +144,11 @@ const TableComponent = (props: any) => {
     const res = await deleteHospital(record.id);
     if (res.code === 200) {
       message.success('删除成功');
-      props.refresh();
+      if(dataSource.length === 1 && props.pagination.page > 1) {
+        props.paginationCount()
+      }else{
+        props.refresh();
+      }
     } else {
       message.error('删除失败');
     }
@@ -157,7 +162,11 @@ const TableComponent = (props: any) => {
     const res = await deleteHospitalBatch(selectedRowIds);
     if (res.code === 200) {
       message.success('删除成功');
-      props.refresh();
+      if(dataSource.length === selectedRowIds.length && props.pagination.page > 1) {
+        props.paginationCount()
+      }else{
+        props.refresh();
+      }
     } else {
       message.error('删除失败');
     }

@@ -32,6 +32,7 @@ export type TableProps = {
   patientCounts:Doctor[]
   hospitalCounts:Hospital[]
   doctorCounts:Doctor[]
+  paginationCount:any
 };
 export type Doctor = {
   id: string;

@@ -155,10 +155,6 @@ const TableComponent: React.FC<TableProps> = (props) => {
       dataIndex: 'createTime',
     },
     {
-      title: '更新时间',
-      dataIndex: 'updateTime',
-    },
-    {
       title: '操作',
       key: 'action',
       render: (_: any, record: DataType) => (
@@ -210,7 +206,11 @@ const TableComponent: React.FC<TableProps> = (props) => {
     const res = await deleteOrder(record.id);
     if (res.code === 200) {
       message.success('删除成功');
-      props.refresh();
+      if(dataSource.length === 1 && props.pagination.page > 1) {
+        props.paginationCount()
+      }else{
+        props.refresh();
+      }
     } else {
       message.error('删除失败');
     }
@@ -225,7 +225,11 @@ const TableComponent: React.FC<TableProps> = (props) => {
     const res = await batchDeleteOrder(selectedRowIds);
     if (res.code === 200) {
       message.success('删除成功');
-      props.refresh();
+      if(dataSource.length === selectedRowIds.length && props.pagination.page > 1) {
+        props.paginationCount()
+      }else{
+        props.refresh();
+      }
     } else {
       message.error('删除失败');
     }

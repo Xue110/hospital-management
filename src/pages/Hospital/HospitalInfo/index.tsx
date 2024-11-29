@@ -47,11 +47,16 @@ const HospitalInfo = () => {
       page: pagination.page,
       pageSize: pagination.pageSize,
       id: filterData?.id,
-      hospitalId: filterData?.hospitalId,
-      paymentStatus: filterData?.paymentStatus,
+      name: filterData?.name,
+      citiesId: filterData?.citiesId,
     };
     const res = await getHospitalList(data);
     setData(res.data.records);
+    setPagination({
+      page: pagination.page,
+      pageSize: pagination.pageSize,
+      total: res.data.total,
+    });
   };
   // 分页变更处理函数
   const handleTableChange = (pagination: any) => {
@@ -77,6 +82,14 @@ const HospitalInfo = () => {
     setInfo(record);
     setOpen(open + 1);
   };
+  //修改分页器数据
+  const paginationCount = (() => {
+    setPagination({
+      page: pagination.page-1,
+      pageSize: pagination.pageSize,
+      total: data.length,
+    });
+  })
   return (
     <>
       <AdHospital
@@ -118,6 +131,7 @@ const HospitalInfo = () => {
           deleteNum={deleteNum}
           refresh={refresh}
           onEdit={onEdit}
+          paginationCount={paginationCount}
         />
       </Card>
     </>

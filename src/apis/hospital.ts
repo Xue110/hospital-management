@@ -38,7 +38,7 @@ export const deleteHospital = (id: number) => {
 // 批量删除医院
 export const deleteHospitalBatch = (ids: number[]) => {
   return request({
-    url: `/admin/hospital/info/batchDelete?ids=${ids}`,
+    url: `/admin/hospital/info/delete/batchDelete?ids=${ids}`,
     method: "DELETE",
   });
 }

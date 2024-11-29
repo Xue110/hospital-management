@@ -11,6 +11,7 @@ const Search = (props: any) => {
   // 搜索
   const handleSearch = () => {
     form.validateFields().then((values) => {
+      console.log(values)
       props.onFilterChange(values);
     });
   };
