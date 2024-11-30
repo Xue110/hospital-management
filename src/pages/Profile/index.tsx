@@ -16,6 +16,11 @@ import {
   UploadProps,
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { 
+  cityList,
+  qualificationList,
+} from '../../utils/data';
+import { useSelector } from 'react-redux';
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 const getBase64 = (file: FileType): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -25,6 +30,7 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onerror = (error) => reject(error);
   });
 const Profile = () => {
+  const hospitalData = useSelector((state: any) => state.hospital.hospitalList);
   const [userInfo, setUserInfo] = useState<any>({
     username: '',
     password: '',
@@ -149,12 +155,7 @@ const Profile = () => {
     <div className="profile">
       <Spin spinning={loading}>
         {userInfo.roleId === 1 && (
-          <Form
-            form={form}
-            onFinish={changeUserInfo} // 提交表单时触发修改
-            onFinishFailed={() => message.error('提交失败，请检查填写的内容')}
-            {...formLayout}
-          >
+          <Form form={form} {...formLayout}>
             <Form.Item label="用户ID" name="id">
               <Input type="text" disabled />
             </Form.Item>
@@ -212,12 +213,7 @@ const Profile = () => {
           </Form>
         )}
         {userInfo.roleId === 2 && (
-          <Form
-            form={form}
-            onFinish={changeUserInfo} // 提交表单时触发修改
-            onFinishFailed={() => message.error('提交失败，请检查填写的内容')}
-            {...formLayout}
-          >
+          <Form form={form} {...formLayout}>
             <Form.Item label="ID" name="id">
               <Input type="text" disabled />
             </Form.Item>
@@ -292,26 +288,17 @@ const Profile = () => {
             </Form.Item>
             <Form.Item label="所在城市" name="citiesId">
               <Select placeholder="请选择城市">
-                <Select.Option value={1}>长春市</Select.Option>
-                <Select.Option value={2}>吉林市</Select.Option>
-                <Select.Option value={3}>四平市</Select.Option>
-                <Select.Option value={4}>辽源市</Select.Option>
-                <Select.Option value={5}>通化市</Select.Option>
-                <Select.Option value={6}>白山市</Select.Option>
-                <Select.Option value={7}>松原市</Select.Option>
-                <Select.Option value={8}>白城市</Select.Option>
-                <Select.Option value={9}>延边朝鲜族自治州</Select.Option>
+              {cityList.map((city) => (
+                  <Select.Option key={city.id} value={city.id}>
+                    {city.name}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
           </Form>
         )}
         {userInfo.roleId === 3 && (
-          <Form
-            form={form}
-            onFinish={changeUserInfo} // 提交表单时触发修改
-            onFinishFailed={() => message.error('提交失败，请检查填写的内容')}
-            {...formLayout}
-          >
+          <Form form={form} {...formLayout}>
             <Form.Item label="ID" name="id">
               <Input type="text" disabled />
             </Form.Item>
@@ -389,34 +376,23 @@ const Profile = () => {
             </Form.Item>
             <Form.Item label="科室" name="departmentId" rules={[{ ...rules }]}>
               <Select placeholder="请选择科室">
-                <Select.Option value={1}>内科</Select.Option>
-                <Select.Option value={2}>外科</Select.Option>
-                <Select.Option value={3}>儿科</Select.Option>
-                <Select.Option value={4}>妇产科</Select.Option>
-                <Select.Option value={5}>骨科</Select.Option>
-                <Select.Option value={6}>皮肤科</Select.Option>
-                <Select.Option value={7}>神经内科</Select.Option>
-                <Select.Option value={8}>耳鼻喉科</Select.Option>
-                <Select.Option value={9}>眼科</Select.Option>
-                <Select.Option value={10}>肿瘤科</Select.Option>
-                <Select.Option value={11}>精神科</Select.Option>
-                <Select.Option value={12}>急诊科</Select.Option>
-                <Select.Option value={13}>口腔科</Select.Option>
-                <Select.Option value={14}>内分泌科</Select.Option>
-                <Select.Option value={15}>泌尿科</Select.Option>
-                <Select.Option value={16}>呼吸科</Select.Option>
-                <Select.Option value={17}>中医科</Select.Option>
-                <Select.Option value={18}>心血管科</Select.Option>
-                <Select.Option value={19}>消化科</Select.Option>
-                <Select.Option value={20}>康复科</Select.Option>
+                {hospitalData.departmentCounts.map((department:any) => (
+                  <Select.Option key={department.id} value={department.id}>
+                    {department.name}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
             <Form.Item label="职称" name="qualification" rules={[{ ...rules }]}>
               <Select placeholder="请选择职称">
-                <Select.Option value={'医学博士'}>医学博士</Select.Option>
-                <Select.Option value={'主任医师'}>主任医师</Select.Option>
-                <Select.Option value={'副主任医师'}>副主任医师</Select.Option>
-                <Select.Option value={'医学硕士'}>医学硕士</Select.Option>
+                {qualificationList.map((qualification) => (
+                  <Select.Option
+                    key={qualification.name}
+                    value={qualification.name}
+                  >
+                    {qualification.name}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
             <Form.Item
@@ -425,28 +401,19 @@ const Profile = () => {
               rules={[{ ...rules }]}
             >
               <Select placeholder="请选择所属医院">
-                <Select.Option value={1}>吉林省人民医院</Select.Option>
-                <Select.Option value={2}>长春市第一医院</Select.Option>
-                <Select.Option value={3}>吉林大学第一医院</Select.Option>
-                <Select.Option value={4}>吉林省中医院</Select.Option>
-                <Select.Option value={5}>长春市第二医院</Select.Option>
-                <Select.Option value={6}>吉林省肿瘤医院</Select.Option>
-                <Select.Option value={7}>长春市儿童医院</Select.Option>
-                <Select.Option value={8}>长春市妇产医院</Select.Option>
-                <Select.Option value={9}>吉林省心血管病医院</Select.Option>
-                <Select.Option value={10}>松原市人民医院</Select.Option>
+                {hospitalData.hospitalConuts.map((hospital:any) => (
+                  <Select.Option key={hospital.id} value={hospital.id}>
+                    {hospital.name}
+                  </Select.Option>
+                ))}
               </Select>
             </Form.Item>
-            <Form.Item
-             label="简介"
-              name="description"
-              rules={[{ ...rules }]}
-            >
+            <Form.Item label="简介" name="description" rules={[{ ...rules }]}>
               <Input.TextArea />
             </Form.Item>
           </Form>
         )}
-        <Button type="primary" htmlType="submit" block>
+        <Button onClick={changeUserInfo} type="primary" block>
           修改
         </Button>
       </Spin>

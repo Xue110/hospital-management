@@ -19,6 +19,7 @@ import {
   RobotOutlined,
   RocketOutlined,
   ScheduleOutlined,
+  ShopOutlined,
   SmileOutlined,
   SolutionOutlined,
   UsergroupAddOutlined,
@@ -29,8 +30,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearUserInfo, fetchUserInfo } from '../../store/module/user';
 import CurrentTime from './Cite/currentTime';
 import { AppDispatch } from '../../type/login';
-import { getPathAPI } from '../../apis/layout';
 import logo from '../../assets/image/logo.png';
+import { getPathAPI } from '../../apis/layout';
+import { getHospitalData } from '../../store/module/storge';
 const { Header, Content, Sider } = Layout;
 
 // 扩展 Menu.Item 类型来支持 path 属性
@@ -82,6 +84,7 @@ const iconMap: { [key: string]: React.ReactNode } = {
   examination: <FormOutlined />,
   xxx: <ScheduleOutlined />,
   profile: <UserOutlined />,
+  yyyy:<ShopOutlined />,
 };
 // 递归映射菜单项
 
@@ -125,7 +128,12 @@ const App: React.FC = () => {
   const {
     token: { borderRadiusLG },
   } = theme.useToken();
-
+  useEffect(() => {
+    const fetchData = async () => {
+      await dispatch(getHospitalData());
+    };
+    fetchData();
+  }, []);
   // 从 localStorage 或 sessionStorage 恢复路由状态
   useEffect(() => {
     const savedPath = localStorage.getItem('currentPath');
@@ -155,11 +163,10 @@ const App: React.FC = () => {
     localStorage.setItem('currentPath', e.key); // 保存当前路径到 localStorage
     setBreadcrumbItems(breadcrumbList);
     // 跳转到对应的路由
-    console.log(path)
+    console.log(path);
     navigate(`/${path}`);
     updateBreadcrumb(e.key); // 更新面包屑
   };
-
   // 根据菜单的path生成面包屑内容
   const generateBreadcrumb = (path: string): string[] => {
     const breadcrumbMap: Record<string, string[]> = {

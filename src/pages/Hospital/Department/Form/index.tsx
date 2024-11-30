@@ -8,7 +8,11 @@ import {
 } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import { addDepartment, updateDepartment } from '../../../../apis/department';
+import { AppDispatch } from '../../../../type/login';
+import { useDispatch } from 'react-redux';
+import { getHospitalData } from '../../../../store/module/storge';
 const FormDataSource = (props: any) => {
+  const dispatch = useDispatch<AppDispatch>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm(); // 修正为 Form.useForm() 返回的 form 实例
   const [loading, setLoading] = useState(false); // 用于控制提交按钮的加载状态
@@ -58,6 +62,7 @@ const FormDataSource = (props: any) => {
           message.error('添加失败');
         }
       }
+      await dispatch(getHospitalData());
     } finally {
       setLoading(false); // 请求完成后恢复按钮状态
     }

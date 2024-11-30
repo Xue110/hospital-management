@@ -22,6 +22,7 @@ import HealthRecords from '../pages/Hospital/Patient/HealthRecords';
 import Medicine from '../pages/Hospital/Patient/Medicine';
 import HospitalInfo from '../pages/Hospital/HospitalInfo';
 import Medical from '../pages/Hospital/medical';
+import Ward from '../pages/Hospital/Ward';
 
 const router = createBrowserRouter([
   {
@@ -83,6 +84,10 @@ const router = createBrowserRouter([
       {
         path: '/hospital/medication',
         element: <AuthRoute><Medical /></AuthRoute>
+      },
+      {
+        path: '/hospital/ward',
+        element: <AuthRoute><Ward /></AuthRoute>
       },
       {
         path: '/patient/order',

@@ -2,9 +2,11 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import userReducer from "./module/user";
+import hospitalReducer from "./module/storge";
 
 export default configureStore({
     reducer:{
-        user:userReducer
+        user:userReducer,
+        hospital:hospitalReducer
     }
 })

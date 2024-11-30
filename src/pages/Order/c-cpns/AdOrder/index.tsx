@@ -10,13 +10,16 @@ import {
   Select,
 } from 'antd';
 import { addOrder } from '../../../../apis/order';
-const AdOrder= (props: any) => {
+import { optionsData } from '../../../../utils/data';
+import { useSelector } from 'react-redux';
+const AdOrder = (props: any) => {
+  const hospitalData = useSelector((state: any) => state.hospital.hospitalList);
+  const userInfo = useSelector((state: any) => state.user.userInfo);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm(); // 修正为 Form.useForm() 返回的 form 实例
   const [loading, setLoading] = useState(false); // 用于控制提交按钮的加载状态
   const [userList, setUserList] = useState<any[]>([]);
   const [patientList, setPatientList] = useState<any[]>([]);
-  const [options, setOption] = useState<any[]>([]);
   useEffect(() => {
     if (props.open) {
       setIsModalOpen(true);
@@ -27,17 +30,20 @@ const AdOrder= (props: any) => {
   useEffect(() => {
     setUserList(props.userCounts);
     setPatientList(props.patientCounts);
-    setOption(props.layoutData);
-  },[props.layoutData,props.patientCounts,props.userCounts]);
+  }, [props.layoutData, props.patientCounts, props.userCounts]);
   // 提交表单数据
   const handleOk = async () => {
     try {
       // 表单验证通过后
       const values = await form.validateFields();
-      values.hospitalId = values.doctorId[0];
-      values.doctorId = values.doctorId[1];
+      if(userInfo.roleId ===1){
+        values.hospitalId = values.doctorId[0];
+        values.doctorId = values.doctorId[1];
+      }else{
+        values.hospitalId = userInfo.hospitalId;
+      }
       values.total = Number(values.total);
-      console.log(values)
+      console.log(values);
       setLoading(true); // 开始请求时禁用按钮，显示加载状态
       const res = await addOrder(values);
       if (res.code === 200) {
@@ -60,8 +66,6 @@ const AdOrder= (props: any) => {
     setIsModalOpen(false);
     form.resetFields(); // 取消时重置表单
   };
-  // 将医生分配到对应的医院
-
   return (
     <>
       <Modal
@@ -139,22 +143,31 @@ const AdOrder= (props: any) => {
             name="doctorId"
             rules={[{ required: true, message: '请选择医生' }]}
           >
-            <Cascader
-              options={options}
-              onChange={onChange}
-              placeholder="请选择医生"
-            />
+            {userInfo.role === 1 && (
+              <Cascader
+                options={optionsData}
+                onChange={onChange}
+                placeholder="请选择医生"
+              />
+            )}
+            {userInfo.role === 2 && (
+              <Select placeholder="请选择主治医师">
+                {hospitalData.doctorCounts.map((doctor: any) => (
+                  <Select.Option key={doctor.id} value={doctor.id}>
+                    {doctor.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            )}
           </Form.Item>
 
           {/* 总金额 */}
           <Form.Item
             label="总金额"
             name="total"
-            rules={[
-              { required: true, message: '请输入总金额' },
-            ]}
+            rules={[{ required: true, message: '请输入总金额' }]}
           >
-            <Input type="number" placeholder='请输入金额' />
+            <Input type="number" placeholder="请输入金额" />
           </Form.Item>
 
           {/* 日期 */}

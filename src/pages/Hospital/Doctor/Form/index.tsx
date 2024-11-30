@@ -5,6 +5,7 @@ import {
   GetProp,
   Image,
   Input,
+  InputNumber,
   message,
   Modal,
   Select,
@@ -12,12 +13,13 @@ import {
   UploadFile,
   UploadProps,
 } from 'antd';
-import { addHospital, updateHospital } from '../../../../apis/hospital';
 import { PlusOutlined } from '@ant-design/icons';
+import { addDoctor, updateDoctor } from '../../../../apis/doctor';
 import TextArea from 'antd/es/input/TextArea';
-import { getHospitalData } from '../../../../store/module/storge';
-import { useDispatch } from 'react-redux';
+import { qualificationList } from '../../../../utils/data';
+import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '../../../../type/login';
+import { getHospitalData } from '../../../../store/module/storge';
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 const getBase64 = (file: FileType): Promise<string> =>
   new Promise((resolve, reject) => {
@@ -26,12 +28,14 @@ const getBase64 = (file: FileType): Promise<string> =>
     reader.onload = () => resolve(reader.result as string);
     reader.onerror = (error) => reject(error);
   });
-const AdHospital = (props: any) => {
+const FormDoctor = (props: any) => {
+  const userInfo = useSelector((state: any) => state.user.userInfo);
   const dispatch = useDispatch<AppDispatch>();
+  const hospitalData = useSelector((state: any) => state.hospital.hospitalList);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm(); // 修正为 Form.useForm() 返回的 form 实例
   const [loading, setLoading] = useState(false); // 用于控制提交按钮的加载状态
-  const [title, setTitle] = useState('添加医院信息');
+  const [title, setTitle] = useState('添加医生信息');
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState('');
   const [fileList, setFileList] = useState<UploadFile[]>([]);
@@ -68,7 +72,7 @@ const AdHospital = (props: any) => {
   );
   useEffect(() => {
     if (props.info && Object.keys(props.info).length > 0) {
-      setTitle('编辑医院信息');
+      setTitle('编辑医生信息');
       form.setFieldsValue(props.info);
       if (fileList.length === 0) {
         fileList.push({
@@ -80,7 +84,7 @@ const AdHospital = (props: any) => {
       }
     } else {
       fileList.length = 0;
-      setTitle('添加医院信息');
+      setTitle('添加医生信息');
       form.resetFields();
     }
     if (props.open) {
@@ -95,12 +99,11 @@ const AdHospital = (props: any) => {
       // 表单验证通过后
       const values = await form.validateFields();
       values.image = fileList[0].thumbUrl;
-      console.log(values);
       setLoading(true); // 开始请求时禁用按钮，显示加载状态
       if (props.info && Object.keys(props.info).length > 0) {
         values.id = props.info.id;
         values.userId = props.info.userId;
-        const res = await updateHospital(values);
+        const res = await updateDoctor(values);
         if (res.code === 200) {
           // 修改成功
           message.success('修改成功');
@@ -111,7 +114,10 @@ const AdHospital = (props: any) => {
           message.error('修改失败');
         }
       } else {
-        const res = await addHospital(values);
+        if(userInfo.roleId !== 1){
+          values.hospitalId = userInfo.hospitalId;
+        }
+        const res = await addDoctor(values);
         if (res.code === 200) {
           // 添加成功
           message.success('添加成功');
@@ -162,17 +168,13 @@ const AdHospital = (props: any) => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            label="医院名称"
+            label="医生名称"
             name="name"
-            rules={[{ required: true, message: '请输入医院名称' }]}
+            rules={[{ required: true, message: '请输入医生名称' }]}
           >
-            <Input placeholder="请输入医院名称" />
+            <Input placeholder="请输入医生名称" />
           </Form.Item>
-          <Form.Item
-            label="医院照片"
-            name="image"
-            rules={[{ required: true, message: '请添加医院照片' }]}
-          >
+          <Form.Item label="医生照片" name="image">
             <div>
               <Upload
                 name="image"
@@ -202,53 +204,81 @@ const AdHospital = (props: any) => {
             </div>
           </Form.Item>
           <Form.Item
-            label="医院地址"
-            name="address"
-            rules={[{ required: true, message: '请输入医院地址' }]}
+            label="医生职称"
+            name="qualification"
+            rules={[{ required: true, message: '请输入医生职称' }]}
           >
-            <Input placeholder="请输入医院地址" />
-          </Form.Item>
-          <Form.Item
-            label="医院电话"
-            name="phone"
-            rules={[{ required: true, message: '请输入医院电话' }]}
-          >
-            <Input placeholder="请输入医院电话" />
-          </Form.Item>
-          <Form.Item
-            label="医院官网"
-            name="website"
-            rules={[{ required: true, message: '请输入医院官网' }]}
-          >
-            <Input placeholder="请输入医院官网" />
-          </Form.Item>
-          <Form.Item
-            name="citiesId"
-            label="所在城市"
-            rules={[{ required: true, message: '请选择所在城市' }]}
-          >
-            <Select placeholder="请选择所在城市">
-              <Select.Option value={1}>长春市</Select.Option>
-              <Select.Option value={2}>吉林市</Select.Option>
-              <Select.Option value={3}>四平市</Select.Option>
-              <Select.Option value={4}>辽源市</Select.Option>
-              <Select.Option value={5}>通化市</Select.Option>
-              <Select.Option value={6}>白山市</Select.Option>
-              <Select.Option value={7}>松原市</Select.Option>
-              <Select.Option value={8}>白城市</Select.Option>
-              <Select.Option value={9}>延边朝鲜族自治州</Select.Option>
+            <Select placeholder="请选择职称">
+              {qualificationList.map((qualification) => (
+                <Select.Option
+                  key={qualification.name}
+                  value={qualification.name}
+                >
+                  {qualification.name}
+                </Select.Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item
-            label="医院简介"
-            name="description"
-            rules={[{ required: true, message: '请输入医院简介' }]}
+            label="所在科室"
+            name="departmentId"
+            rules={[{ required: true, message: '请输入医生科室' }]}
           >
-            <TextArea rows={6} placeholder="请输入医院简介" />
+            <Select placeholder="请选择科室">
+              {hospitalData.departmentCounts.map((department: any) => (
+                <Select.Option key={department.id} value={department.id}>
+                  {department.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          {(!props.info || Object.keys(props.info).length === 0) &&
+          userInfo.roleId === 1 ? (
+            <Form.Item
+              label="所属医院"
+              name="hospitalId"
+              rules={[{ required: true, message: '请选择所属医院' }]}
+            >
+              <Select placeholder="请选择所属医院">
+                {hospitalData.hospitalCounts.map((hospital: any) => (
+                  <Select.Option key={hospital.id} value={hospital.id}>
+                    {hospital.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          ) : null}
+          <Form.Item
+            label="医生电话"
+            name="phone"
+            rules={[{ required: true, message: '请输入医生电话' }]}
+          >
+            <Input placeholder="请输入医生电话" />
+          </Form.Item>
+          <Form.Item
+            label="医生邮箱"
+            name="email"
+            rules={[{ required: true, message: '请输入医生邮箱' }]}
+          >
+            <Input placeholder="请输入医生邮箱" />
+          </Form.Item>
+          <Form.Item
+            label="收费金额"
+            name="fee"
+            rules={[{ required: true, message: '请输入收费金额' }]}
+          >
+            <InputNumber addonAfter="￥" defaultValue={59} />
+          </Form.Item>
+          <Form.Item
+            label="医生简介"
+            name="description"
+            rules={[{ required: true, message: '请输入医生简介' }]}
+          >
+            <TextArea rows={6} placeholder="请输入医生简介" />
           </Form.Item>
         </Form>
       </Modal>
     </>
   );
 };
-export default AdHospital;
+export default FormDoctor;

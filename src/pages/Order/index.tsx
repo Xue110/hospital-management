@@ -39,7 +39,6 @@ const Order = () => {
   const [doctorCounts, setDoctorCounts] = useState<Doctor[]>([]);
   const [userCounts, setUserCounts] = useState<Doctor[]>([]);
   const [patientCounts, setPatientCounts] = useState<Doctor[]>([]);
-  const [layoutData, setLayoutData] = useState<any>([]);
   // 新增订单
   const handleClick = () => {
     setOpen(open + 1);
@@ -84,25 +83,6 @@ const Order = () => {
   const refresh = useCallback(() => {
     getData();
   }, [pagination.page, pagination.pageSize, filterData]);
-  const assignDoctorsToHospitals = (
-    doctorCounts: Doctor[],
-    hospitalCounts: any[]
-  ): void => {
-    const hospitalMap = new Map<string, Hospital>();
-    hospitalCounts.forEach((hospital) => {
-      if (!hospital.children) {
-        hospital.children = [];
-      }
-      hospitalMap.set(hospital.value, hospital);
-    });
-    doctorCounts.forEach((doctor) => {
-      const hospital = hospitalMap.get(doctor.hospitalId);
-      if (hospital) {
-        // 将医生添加到医院的 `children` 数组中
-        hospital.children?.push(doctor);
-      }
-    });
-  };
   // 获取列表信息
   const getOrderInfo = async () => {
     const res = await getLayoutAPI();
@@ -113,23 +93,6 @@ const Order = () => {
       setPatientCounts(res.data.patientCounts);
       setHospitalCounts(res.data.hospitalCounts);
       setDoctorCounts(res.data.doctorCounts);
-      const hospitalOptions = res.data.hospitalCounts.map(
-        (hospital: Hospital) => ({
-          value: hospital.id,
-          label: hospital.name,
-          children: hospital.children?.map((doctor: Doctor) => ({
-            value: doctor.id,
-            label: doctor.name,
-          })),
-        })
-      );
-      const doctorOptions = res.data.doctorCounts.map((doctor: Doctor) => ({
-        value: doctor.id,
-        label: `${doctor.name}医生`,
-        hospitalId: doctor.hospitalId,
-      }));
-      assignDoctorsToHospitals(doctorOptions, hospitalOptions);
-      setLayoutData(hospitalOptions);
     } else {
       message.error('获取失败');
     }
@@ -147,7 +110,7 @@ const Order = () => {
     })
   return (
     <>
-      <AdOrder open={open} refresh={refresh} userCounts={userCounts} patientCounts={patientCounts} layoutData={layoutData}/>
+      <AdOrder open={open} refresh={refresh} userCounts={userCounts} patientCounts={patientCounts}/>
       <Card title="筛选订单">
         <Search onFilterChange={handleFilterChange} hospitalCounts={hospitalCounts} />
       </Card>

@@ -9,4 +9,5 @@ export type Hospital ={
     createTime?: string,
     updateTime?: string
     citiesId?: number,
+    userId?: number
 }

@@ -4,8 +4,12 @@ import './index.scss';
 import { DeleteOutlined, EyeOutlined, FormOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
 import { deleteDepartment } from '../../../../apis/department';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../../../type/login';
+import { getHospitalData } from '../../../../store/module/storge';
 
 const TableComponent = (props: any) => {
+  const dispatch = useDispatch<AppDispatch>();
   // 表格数据
   const [dataSource, setDataSource] = useState<any[]>([]);
   // 详情数据
@@ -42,7 +46,7 @@ const TableComponent = (props: any) => {
       ellipsis: {
         showTitle: false,
       },
-      render:(description:any) => (
+      render: (description: any) => (
         <Tooltip placement="topLeft" title={description}>
           {description}
         </Tooltip>
@@ -50,7 +54,7 @@ const TableComponent = (props: any) => {
       width: '30%',
     },
     {
-      title:'创建时间',
+      title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTime',
       width: '15%',
@@ -112,6 +116,7 @@ const TableComponent = (props: any) => {
       } else {
         props.refresh();
       }
+      await dispatch(getHospitalData());
     } else {
       message.error('删除失败,请删除当前科室下的相关医生、患者等信息后重试');
     }

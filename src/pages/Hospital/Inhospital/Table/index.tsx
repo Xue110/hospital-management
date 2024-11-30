@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Button, message, Drawer, Tag, Card, Col, Row } from 'antd';
+import {
+  Table,
+  Button,
+  message,
+  Drawer,
+  Tag,
+  Card,
+  Col,
+  Row,
+} from 'antd';
 import './index.scss';
 import { DeleteOutlined, EyeOutlined, FormOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
-import { deleteHospital, deleteHospitalBatch } from '../../../../apis/hospital';
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '../../../../type/login';
-import { getHospitalData } from '../../../../store/module/storge';
+import { deleteHospitalManage, deleteHospitalManageBatch } from '../../../../apis/hospital';
 
 const TableComponent = (props: any) => {
-  const dispatch = useDispatch<AppDispatch>();
   // 表格数据
   const [dataSource, setDataSource] = useState<any[]>([]);
   // 详情数据
@@ -27,62 +32,67 @@ const TableComponent = (props: any) => {
   useEffect(() => {
     setDataSource(props.data);
   }, [props.data]);
-  // render渲染
-  const city = {
-    1: '长春市',
-    2: '吉林市',
-    3: '四平市',
-    4: '辽源市',
-    5: '通化市',
-    6: '白山市',
-    7: '松原市',
-    8: '白城市',
-    9: '延边朝鲜族自治州',
-  };
-  const renderCity = (citiesId: any) => {
-    return <Tag color="#2db7f5">{city[citiesId as keyof typeof city]}</Tag>;
-  };
   // 表格列
   const columns = [
     {
-      title: '医院ID',
+      title: '住院记录ID',
       dataIndex: 'id',
       key: 'id',
+      width: '8%',
     },
     {
-      title: '医院名称',
-      dataIndex: 'name',
-      key: 'name',
+      title: '患者名',
+      dataIndex: 'patientName',
+      key: 'patientName',
+      width: '8%',
     },
     {
-      title: '医院图片',
-      dataIndex: 'image',
-      key: 'image',
-      render: (image: any) => (
-        <img src={image} alt="" style={{ width: '100%', height: '100px' }} />
-      ),
+      title: '床位号',
+      dataIndex: 'number',
+      key: 'numbaer',
+      render: (number: any) => {
+        return <Tag color={'blue'}>{number}床</Tag>;
+      },
+      width: '8%',
     },
     {
-      title: '医院地址',
-      dataIndex: 'address',
-      key: 'address',
-      width: '170px',
+      title: '负责医生',
+      dataIndex: 'doctorName',
+      key: 'doctorName',
+      width: '8%',
     },
     {
-      title: '医院电话',
-      dataIndex: 'phone',
-      key: 'phone',
+      title: '科室',
+      dataIndex: 'departmentName',
+      key: 'departmentName',
+      width: '8%',
+      render: (departmentName: any) => {
+        return <Tag color={'orange'}>{departmentName}</Tag>;
+      },
     },
     {
-      title: '医院官网',
-      dataIndex: 'website',
-      key: 'website',
+      title: '所在医院',
+      dataIndex: 'hospitalName',
+      key: 'hospitalName',
+      width: '8%',
+      render: (hospitalName: any) => {
+        return <Tag color={'purple'}>{hospitalName}</Tag>;
+      },
     },
     {
-      title: '所在城市',
-      dataIndex: 'citiesId',
-      key: 'citiesId',
-      render: (citiesId: any) => renderCity(citiesId),
+      title: '紧急联系人',
+      dataIndex: 'patientContact',
+      key: 'patientContact',
+      width: '12%',
+    },
+    {
+      title: '状态',
+      dataIndex: 'status',
+      key: 'status',
+      width: '8%',
+      render: (status: any) => {
+        return status === 1 ? <Tag color={'green'}>住院中</Tag> : status === 2 ? <Tag color={'red'}>已出院</Tag> : <Tag color={'orange'}>已转院</Tag>;
+      }
     },
     {
       title: '操作',
@@ -133,7 +143,7 @@ const TableComponent = (props: any) => {
 
   // 删除订单
   const handleDelete = async (record: any) => {
-    const res = await deleteHospital(record.id);
+    const res = await deleteHospitalManage(record.id);
     if (res.code === 200) {
       message.success('删除成功');
       if (dataSource.length === 1 && props.pagination.page > 1) {
@@ -141,7 +151,6 @@ const TableComponent = (props: any) => {
       } else {
         props.refresh();
       }
-      await dispatch(getHospitalData());
     } else {
       message.error('删除失败');
     }
@@ -152,7 +161,7 @@ const TableComponent = (props: any) => {
   };
   // 批量删除
   const handleBatchDelete = async () => {
-    const res = await deleteHospitalBatch(selectedRowIds);
+    const res = await deleteHospitalManageBatch(selectedRowIds);
     if (res.code === 200) {
       message.success('删除成功');
       if (
@@ -163,7 +172,6 @@ const TableComponent = (props: any) => {
       } else {
         props.refresh();
       }
-      await dispatch(getHospitalData());
     } else {
       message.error('删除失败');
     }
@@ -184,53 +192,58 @@ const TableComponent = (props: any) => {
   };
   return (
     <div className="order-table">
-      <Drawer title="医院详情" onClose={onClose} open={open} width={600}>
+      <Drawer title="住院详情" onClose={onClose} open={open} width={600}>
         <Card bordered={false}>
           <Row gutter={24}>
-            {/* 医院ID */}
-            <Col span={8}>
-              <Title level={5}>医院ID</Title>
+            {/* 住院ID */}
+            <Col span={12}>
+              <Title level={5}>住院记录ID</Title>
               <p>{detailData?.id}</p>
             </Col>
-            {/* 用户ID */}
-            <Col span={8}>
-              <Title level={5}>用户ID</Title>
-              <p>{detailData?.userId}</p>
-            </Col>
-            {/* 医院名称 */}
-            <Col span={8}>
-              <Title level={5}>医院名称</Title>
-              <p>{detailData?.name}</p>
-            </Col>
-            {/* 所在城市 */}
+            {/* 住院名称 */}
             <Col span={12}>
-              <Title level={5}>所在城市</Title>
-              <p>{renderCity(detailData?.citiesId)}</p>
+              <Title level={5}>患者名</Title>
+              <p>{detailData?.patientName}</p>
             </Col>
-            {/* 医院官网 */}
+            {/* 住院时间 */}
             <Col span={12}>
-              <Title level={5}>医院官网</Title>
-              <p>{detailData?.website}</p>
+              <Title level={5}>住院时间</Title>
+              <p>{detailData?.admissionDate}</p>
             </Col>
-            {/* 医院地址 */}
+            {/* 出院时间 */}
             <Col span={12}>
-              <Title level={5}>医院地址</Title>
-              <p>{detailData?.address}</p>
+              <Title level={5}>出院时间</Title>
+              <p>{detailData?.dischargeDate}</p>
             </Col>
-            {/* 医院电话 */}
+            {/* 住院状态 */}
             <Col span={12}>
-              <Title level={5}>医院电话</Title>
-              <p>{detailData?.phone}</p>
+              <Title level={5}>住院状态</Title>
+              <p>{detailData?.status === 1 ? '住院中' : detailData?.status === 2 ? '已出院' : '已转院'}</p>
             </Col>
-            {/* 医院图片 */}
-            <Col span={24}>
-              <Title level={5}>医院图片</Title>
-              <img src={detailData?.image} alt="" style={{ width: '100%' }} />
+            {/* 病床号 */}
+            <Col span={12}>
+              <Title level={5}>病床号</Title>
+              <p>{detailData?.number}</p>
             </Col>
-            {/* 医院简介 */}
-            <Col span={24}>
-              <Title level={5}>医院简介</Title>
-              <p>{detailData?.description}</p>
+            {/* 负责医生 */}
+            <Col span={12}>
+              <Title level={5}>负责医生</Title>
+              <p>{detailData?.doctorName}医生</p>
+            </Col>
+            {/* 住院科室 */}
+            <Col span={12}>
+              <Title level={5}>所在科室</Title>
+              <p>{detailData?.departmentName}</p>
+            </Col>
+            {/* 所在医院 */}
+            <Col span={12}>
+              <Title level={5}>所在医院</Title>
+              <p>{detailData?.hospitalName}</p>
+            </Col>
+            {/* 紧急联系人电话 */}
+            <Col span={12}>
+              <Title level={5}>紧急联系人电话</Title>
+              <p>{detailData?.patientContact}</p>
             </Col>
           </Row>
         </Card>

@@ -22,8 +22,10 @@ import {
   updateOrder,
 } from '../../../../apis/order';
 import Title from 'antd/es/typography/Title';
+import { useSelector } from 'react-redux';
 
 const TableComponent: React.FC<TableProps> = (props) => {
+  const hospitalData = useSelector((state: any) => state.hospital.hospitalList);
   // 表格数据
   const [dataSource, setDataSource] = useState<DataType[]>([]);
   // 详情数据
@@ -81,22 +83,6 @@ const TableComponent: React.FC<TableProps> = (props) => {
     3: <Tag color="#2db7f5">已取消</Tag>,
     4: <Tag color="gold">已超时</Tag>,
   };
-  const hospital = {
-    1: '吉林省人民医院',
-    2: '长春市第一医院',
-    3: '吉林大学第一医院',
-    4: '吉林省中医院',
-    5: '长春市第二医院',
-    6: '吉林省肿瘤医院',
-    7: '长春市儿童医院',
-    8: '长春市妇产医院',
-    9: '吉林省心血管病医院',
-    10: '松原市人民医院',
-  };
-  const renderHosptial = (text: any) => {
-    // 类型断言
-    return hospital[text as keyof typeof hospital];
-  };
   const renderType = (text: any) => {
     // 类型断言
     return type[text as keyof typeof type];
@@ -148,7 +134,10 @@ const TableComponent: React.FC<TableProps> = (props) => {
       title: '医院名称',
       dataIndex: 'hospitalId',
       key: 'hospitalId',
-      render: renderHosptial,
+      render: (text: any) => {
+        return hospitalData.hospitalCounts.find((item: any) => item.id === text)?.name;
+      }
+      ,
     },
     {
       title: '创建时间',

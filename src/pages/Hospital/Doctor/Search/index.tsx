@@ -3,8 +3,9 @@ import './index.scss';
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { useSelector } from 'react-redux';
 const Search = (props: any) => {
-  const [form] = Form.useForm();
   const userInfo = useSelector((state: any) => state.user.userInfo);
+  const hospitalData = useSelector((state: any) => state.hospital.hospitalList);
+  const [form] = Form.useForm();
   // 重置表单
   const handleReset = () => {
     form.resetFields();
@@ -13,8 +14,8 @@ const Search = (props: any) => {
   // 搜索
   const handleSearch = () => {
     form.validateFields().then((values) => {
-      if(userInfo.roleId === 1){
-        values.hospitalId = userInfo.hospitalId
+      if (userInfo.roleId === 2) {
+        values.hospitalId = userInfo.hospitalId;
       }
       props.onFilterChange(values);
     });
@@ -23,41 +24,40 @@ const Search = (props: any) => {
     <div>
       <Form form={form} layout="inline">
         <Row justify="space-between" style={{ width: '100%' }}>
-          {/* 订单ID输入框 */}
+          {/* 医生名输入框 */}
           <Col span={7}>
-            <Form.Item name="id" label="订单ID">
-              <Input placeholder="请输入订单ID" />
+            <Form.Item name="name" label="医生名">
+              <Input placeholder="请输入医生名" />
             </Form.Item>
           </Col>
 
-          {/* 医院名输入框 */}
+          {/* 科室名选择框 */}
+          <Col span={7}>
+            <Form.Item name="departmentId" label="科室">
+              <Select placeholder="请选择科室">
+                {hospitalData.departmentCounts.map((department: any) => (
+                  <Select.Option key={department.id} value={department.id}>
+                    {department.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+          </Col>
+
+          {/* 医院名选择框 */}
           {userInfo.roleId === 1 && (
             <Col span={7}>
               <Form.Item name="hospitalId" label="医院">
                 <Select placeholder="请选择医院">
-                  {props.hospitalCounts.map((item: any) => {
-                    return (
-                      <Select.Option key={item.id} value={item.id}>
-                        {item.name}
-                      </Select.Option>
-                    );
-                  })}
+                  {hospitalData.hospitalCounts.map((hospital: any) => (
+                    <Select.Option key={hospital.id} value={hospital.id}>
+                      {hospital.name}
+                    </Select.Option>
+                  ))}
                 </Select>
               </Form.Item>
             </Col>
           )}
-
-          {/* 订单状态选择框 */}
-          <Col span={7}>
-            <Form.Item name="paymentStatus" label="订单状态">
-              <Select placeholder="请选择订单状态">
-                <Select.Option value={1}>未支付</Select.Option>
-                <Select.Option value={2}>已支付</Select.Option>
-                <Select.Option value={3}>已取消</Select.Option>
-                <Select.Option value={4}>已超时</Select.Option>
-              </Select>
-            </Form.Item>
-          </Col>
         </Row>
       </Form>
 

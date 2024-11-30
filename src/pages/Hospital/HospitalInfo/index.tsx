@@ -20,6 +20,7 @@ const HospitalInfo = () => {
       website: 'https://www.baidu.com',
       description: '北京医院是北京市的一所大型综合性医院',
       citiesId: 2,
+      userId:1,
     },
   ]);
   const [open, setOpen] = useState<number>(0);
