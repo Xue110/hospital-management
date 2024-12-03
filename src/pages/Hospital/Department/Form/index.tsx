@@ -38,6 +38,7 @@ const FormDataSource = (props: any) => {
       const values = await form.validateFields();
       console.log(values);
       setLoading(true); // 开始请求时禁用按钮，显示加载状态
+      setIsModalOpen(false); // 关闭弹窗
       if (props.info && Object.keys(props.info).length > 0) {
         values.id = props.info.id;
         const res = await updateDepartment(values);
@@ -45,10 +46,7 @@ const FormDataSource = (props: any) => {
           // 修改成功
           message.success('修改成功');
           form.resetFields(); // 提交成功后重置表单
-          setIsModalOpen(false); // 关闭弹窗
           await props.refresh(); // 刷新科室列表
-        } else {
-          message.error('修改失败');
         }
       } else {
         const res = await addDepartment(values);
@@ -56,10 +54,7 @@ const FormDataSource = (props: any) => {
           // 添加成功
           message.success('添加成功');
           form.resetFields(); // 提交成功后重置表单
-          setIsModalOpen(false); // 关闭弹窗
           await props.refresh(); // 刷新科室列表
-        } else {
-          message.error('添加失败');
         }
       }
       await dispatch(getHospitalData());

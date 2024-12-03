@@ -63,7 +63,7 @@ const Profile = () => {
       message.success('修改成功');
       getUserInfo();
     } else {
-      message.error(res.msg || '修改失败');
+      message.error( '修改失败');
     }
   };
 

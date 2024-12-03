@@ -100,6 +100,7 @@ const FormDoctor = (props: any) => {
       const values = await form.validateFields();
       values.image = fileList[0].thumbUrl;
       setLoading(true); // 开始请求时禁用按钮，显示加载状态
+      setIsModalOpen(false); // 关闭弹窗
       if (props.info && Object.keys(props.info).length > 0) {
         values.id = props.info.id;
         values.userId = props.info.userId;
@@ -108,13 +109,10 @@ const FormDoctor = (props: any) => {
           // 修改成功
           message.success('修改成功');
           form.resetFields(); // 提交成功后重置表单
-          setIsModalOpen(false); // 关闭弹窗
           await props.refresh(); // 刷新用户列表
-        } else {
-          message.error('修改失败');
         }
       } else {
-        if(userInfo.roleId !== 1){
+        if (userInfo.roleId !== 1) {
           values.hospitalId = userInfo.hospitalId;
         }
         const res = await addDoctor(values);
@@ -122,10 +120,7 @@ const FormDoctor = (props: any) => {
           // 添加成功
           message.success('添加成功');
           form.resetFields(); // 提交成功后重置表单
-          setIsModalOpen(false); // 关闭弹窗
           await props.refresh(); // 刷新用户列表
-        } else {
-          message.error('添加失败');
         }
       }
       await dispatch(getHospitalData());

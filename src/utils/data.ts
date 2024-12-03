@@ -49,45 +49,45 @@ interface Room {
   children?: Bed[]; // 每个房间有多个床位
 }
 
-// const assignBedsToRooms = (
-//   roomsOptions: any[], // 房间信息
-//   bedsOptions: Bed[] // 床位信息
-// ): void => {
-//   const roomMap = new Map<string, Room>();
+const assignBedsToRooms = (
+  roomsOptions: any[], // 房间信息
+  bedsOptions: Bed[] // 床位信息
+): void => {
+  const roomMap = new Map<string, Room>();
 
-//   // 将房间数据存入 roomMap，key 是 room.id，value 是 Room 对象
-//   roomsOptions.forEach((room) => {
-//     room.children = room.children || []; // 确保每个房间都有一个 children 数组
-//     roomMap.set(room.value, room); // 使用 room.id 作为唯一标识
-//   });
+  // 将房间数据存入 roomMap，key 是 room.id，value 是 Room 对象
+  roomsOptions.forEach((room) => {
+    room.children = room.children || []; // 确保每个房间都有一个 children 数组
+    roomMap.set(room.value, room); // 使用 room.id 作为唯一标识
+  });
 
-//   // 遍历床位数据，将床位分配到对应的房间
-//   bedsOptions.forEach((bed) => {
-//     const room = roomMap.get(bed.roomId);
-//     if (room) {
-//       room.children?.push(bed); // 将床位添加到对应的房间的 children 数组中
-//     }
-//   });
-// };
+  // 遍历床位数据，将床位分配到对应的房间
+  bedsOptions.forEach((bed) => {
+    const room = roomMap.get(bed.roomId);
+    if (room) {
+      room.children?.push(bed); // 将床位添加到对应的房间的 children 数组中
+    }
+  });
+};
 
-// const roomsOptions: Room[] = hospitalData.roomCounts.map((room: any) => ({
-//   value: room.id,
-//   label: room.number,
-//   children: room.children?.map((bed: any) => ({
-//     value: bed.id,
-//     label: bed.bedNumber,
-//   })),
-// }));
+const roomsOptions: Room[] = hospitalData.roomsCounts.map((room: any) => ({
+  value: room.id,
+  label: room.number,
+  children: room.children?.map((bed: any) => ({
+    value: bed.id,
+    label: bed.bedNumber,
+  })),
+}));
 
-// const bedsOptions: Bed[] = hospitalData.bedCounts.map((bed: any) => ({
-//   value: bed.id,
-//   label: bed.bedNumber,
-//   roomId: bed.roomId, // 床位和房间的映射关系
-// }));
+const bedsOptions: Bed[] = hospitalData.bedCounts.map((bed: any) => ({
+  value: bed.id,
+  label: bed.bedNumber,
+  roomId: bed.roomsId, // 床位和房间的映射关系
+}));
 
-// // 调用函数进行床位分配
-// assignBedsToRooms(roomsOptions, bedsOptions);
-// export const roomOptions = roomsOptions;
+// 调用函数进行床位分配
+assignBedsToRooms(roomsOptions, bedsOptions);
+export const roomOptions = roomsOptions;
 export const optionsData = hospitalOptions;
 export const hospitalList = [
   { id: 1, name: '吉林省人民医院' },

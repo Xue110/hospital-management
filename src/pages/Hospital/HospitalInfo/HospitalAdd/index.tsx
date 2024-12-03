@@ -95,8 +95,8 @@ const AdHospital = (props: any) => {
       // 表单验证通过后
       const values = await form.validateFields();
       values.image = fileList[0].thumbUrl;
-      console.log(values);
       setLoading(true); // 开始请求时禁用按钮，显示加载状态
+      setIsModalOpen(false); // 关闭弹窗
       if (props.info && Object.keys(props.info).length > 0) {
         values.id = props.info.id;
         values.userId = props.info.userId;
@@ -105,10 +105,7 @@ const AdHospital = (props: any) => {
           // 修改成功
           message.success('修改成功');
           form.resetFields(); // 提交成功后重置表单
-          setIsModalOpen(false); // 关闭弹窗
           await props.refresh(); // 刷新用户列表
-        } else {
-          message.error('修改失败');
         }
       } else {
         const res = await addHospital(values);
@@ -116,10 +113,7 @@ const AdHospital = (props: any) => {
           // 添加成功
           message.success('添加成功');
           form.resetFields(); // 提交成功后重置表单
-          setIsModalOpen(false); // 关闭弹窗
           await props.refresh(); // 刷新用户列表
-        } else {
-          message.error('添加失败');
         }
       }
       await dispatch(getHospitalData());

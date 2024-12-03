@@ -3,6 +3,7 @@
 import axios from "axios"
 import { clearToken, getToken } from "./token"
 import router from "../router"
+import { message } from "antd"
 
 // 1.根域名配置
 // 2.超时时间
@@ -40,6 +41,7 @@ request.interceptors.response.use((response)=> {
     // 对响应错误做点什么
     // 监控401 token失效
     console.dir(error)
+    message.error(error.response.data.message,6)
     if(error.response.status === 401) {
       clearToken()
       router.navigate('/login')

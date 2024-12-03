@@ -8,15 +8,20 @@ import {
   Card,
   Col,
   Row,
+  Tooltip,
 } from 'antd';
 import './index.scss';
 import { DeleteOutlined, EyeOutlined, FormOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
-import { deleteHospitalManage, deleteHospitalManageBatch } from '../../../../apis/hospital';
+import {  deleteRegister, deleteRegisterBatch } from '../../../../apis/hospital';
 
 const TableComponent = (props: any) => {
   // 表格数据
   const [dataSource, setDataSource] = useState<any[]>([]);
+  const processedDataSource = dataSource.map(item => ({
+    ...item,  // 保留原始字段
+    time: `${item.startTime} - ${item.endTime}`  // 合并 startTime 和 endTime 为 time
+  }));
   // 详情数据
   const [detailData, setDetailData] = useState<any>();
   // 选中行ID
@@ -35,10 +40,10 @@ const TableComponent = (props: any) => {
   // 表格列
   const columns = [
     {
-      title: '住院记录ID',
+      title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      width: '8%',
+      width: '4%',
     },
     {
       title: '患者名',
@@ -47,16 +52,7 @@ const TableComponent = (props: any) => {
       width: '8%',
     },
     {
-      title: '床位号',
-      dataIndex: 'number',
-      key: 'numbaer',
-      render: (number: any) => {
-        return <Tag color={'blue'}>{number}</Tag>;
-      },
-      width: '8%',
-    },
-    {
-      title: '负责医生',
+      title: '指定医生',
       dataIndex: 'doctorName',
       key: 'doctorName',
       width: '8%',
@@ -80,18 +76,50 @@ const TableComponent = (props: any) => {
       },
     },
     {
-      title: '紧急联系人',
-      dataIndex: 'patientContact',
-      key: 'patientContact',
-      width: '12%',
+      title:'金额',
+      dataIndex: 'paymentAmount',
+      key: 'paymentAmount',
+      width: '6%',
+      render: (paymentAmount: any) => {
+        return <Tag color={'blue'}>{paymentAmount}元</Tag>;
+      }
     },
     {
-      title: '状态',
+      title: '挂号日期',
+      dataIndex: 'date',
+      key: 'date',
+      width: '8%',
+    },
+    {
+      title: '预约时间',
+      dataIndex: 'time',
+      key: 'time',
+      width: '8%',
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (time: any) => (
+        <Tooltip placement="topLeft" title={time}>
+          {time}
+        </Tooltip>
+      ),
+    },
+    {
+      title: '状态',// 1.待确认 2.已确认 3.已就诊 4.已取消
       dataIndex: 'status',
       key: 'status',
       width: '8%',
       render: (status: any) => {
-        return status === 1 ? <Tag color={'green'}>住院中</Tag> : status === 2 ? <Tag color={'red'}>已出院</Tag> : <Tag color={'orange'}>已转院</Tag>;
+        return status === 1 ? <Tag color={'green'}>待确认</Tag> : status === 2 ? <Tag color={'red'}>已确认</Tag> : status === 3 ? <Tag color={'blue'}>已就诊</Tag> : <Tag color={'orange'}>已取消</Tag>;
+      }
+    },
+    {
+      title: '支付状态',// 1.未支付 2.已支付 3.已退款
+      dataIndex: 'paymentStatus',
+      key: 'paymentStatus',
+      width: '8%',
+      render: (paymentStatus: any) => {
+        return paymentStatus === 1 ? <Tag color={'green'}>未支付</Tag> : paymentStatus === 2 ? <Tag color={'red'}>已支付</Tag> : <Tag color={'orange'}>已退款</Tag>;
       }
     },
     {
@@ -143,7 +171,7 @@ const TableComponent = (props: any) => {
 
   // 删除订单
   const handleDelete = async (record: any) => {
-    const res = await deleteHospitalManage(record.id);
+    const res = await deleteRegister(record.id);
     if (res.code === 200) {
       message.success('删除成功');
       if (dataSource.length === 1 && props.pagination.page > 1) {
@@ -161,7 +189,7 @@ const TableComponent = (props: any) => {
   };
   // 批量删除
   const handleBatchDelete = async () => {
-    const res = await deleteHospitalManageBatch(selectedRowIds);
+    const res = await deleteRegisterBatch(selectedRowIds);
     if (res.code === 200) {
       message.success('删除成功');
       if (
@@ -192,45 +220,50 @@ const TableComponent = (props: any) => {
   };
   return (
     <div className="order-table">
-      <Drawer title="住院详情" onClose={onClose} open={open} width={600}>
+      <Drawer title="挂号详情" onClose={onClose} open={open} width={600}>
         <Card bordered={false}>
           <Row gutter={24}>
-            {/* 住院ID */}
+            {/* 挂号ID */}
             <Col span={12}>
-              <Title level={5}>住院记录ID</Title>
+              <Title level={5}>挂号记录ID</Title>
               <p>{detailData?.id}</p>
             </Col>
-            {/* 住院名称 */}
+            {/* 挂号名称 */}
             <Col span={12}>
               <Title level={5}>患者名</Title>
               <p>{detailData?.patientName}</p>
             </Col>
-            {/* 住院时间 */}
+            {/* 挂号时间 */}
             <Col span={12}>
-              <Title level={5}>住院时间</Title>
-              <p>{detailData?.admissionDate}</p>
+              <Title level={5}>挂号时间</Title>
+              <p>{detailData?.date}</p>
             </Col>
-            {/* 出院时间 */}
+            {/* 预约 */}
             <Col span={12}>
-              <Title level={5}>出院时间</Title>
-              <p>{detailData?.dischargeDate}</p>
+              <Title level={5}>预约时间段</Title>
+              <p>{detailData?.startTime}-{detailData?.endTime}</p>
             </Col>
-            {/* 住院状态 */}
+            {/* 挂号状态： 1.待确认 2.已确认 3.已就诊 4.已取消 */}
             <Col span={12}>
-              <Title level={5}>住院状态</Title>
-              <p>{detailData?.status === 1 ? '住院中' : detailData?.status === 2 ? '已出院' : '已转院'}</p>
+              <Title level={5}>挂号状态</Title>
+              <p>{detailData?.status === 1 ? '待确认' : detailData?.status === 2 ? '已确认' : detailData?.status === 3 ? '已就诊' : '已取消'}</p>
             </Col>
-            {/* 病床号 */}
+            {/* 挂号费用 */}
             <Col span={12}>
-              <Title level={5}>病床号</Title>
-              <p>{detailData?.number}</p>
+              <Title level={5}>挂号费用</Title>
+              <p>{detailData?.paymentAmount}元</p>
+            </Col>
+            {/* 支付状态： 1.未支付 2.已支付 3.已退款 */}
+            <Col span={12}>
+              <Title level={5}>支付状态</Title>
+              <p>{detailData?.paymentStatus === 1 ? '未支付' : detailData?.paymentStatus === 2 ? '已支付' : '已退款'}</p>
             </Col>
             {/* 负责医生 */}
             <Col span={12}>
-              <Title level={5}>负责医生</Title>
+              <Title level={5}>指定医生</Title>
               <p>{detailData?.doctorName}医生</p>
             </Col>
-            {/* 住院科室 */}
+            {/* 挂号科室 */}
             <Col span={12}>
               <Title level={5}>所在科室</Title>
               <p>{detailData?.departmentName}</p>
@@ -240,18 +273,13 @@ const TableComponent = (props: any) => {
               <Title level={5}>所在医院</Title>
               <p>{detailData?.hospitalName}</p>
             </Col>
-            {/* 紧急联系人电话 */}
-            <Col span={12}>
-              <Title level={5}>紧急联系人电话</Title>
-              <p>{detailData?.patientContact}</p>
-            </Col>
           </Row>
         </Card>
       </Drawer>
       <Table
         rowSelection={rowSelection}
         columns={columns}
-        dataSource={dataSource}
+        dataSource={processedDataSource}
         rowKey="id"
         pagination={{
           current: props.pagination.page,

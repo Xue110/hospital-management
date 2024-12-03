@@ -1,12 +1,20 @@
 import { useEffect, useState } from 'react';
 import './index.scss';
-import { Cascader, CascaderProps, Form, message, Modal, Select } from 'antd';
+import {
+  Cascader,
+  CascaderProps,
+  DatePicker,
+  Form,
+  message,
+  Modal,
+  Select,
+} from 'antd';
 import {
   addHospitalManage,
   updateHospitalManage,
 } from '../../../../apis/hospital';
 import { useSelector } from 'react-redux';
-import { optionsData } from '../../../../utils/data';
+import { optionsData, roomOptions } from '../../../../utils/data';
 const FormDoctor = (props: any) => {
   const hospitalData = useSelector((state: any) => state.hospital.hospitalList);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,14 +43,7 @@ const FormDoctor = (props: any) => {
       const values = await form.validateFields();
       console.log(values);
       setLoading(true); // 开始请求时禁用按钮，显示加载状态
-      if (userInfo.roleId === 1) {
-        values.hospitalId = values.doctorId[0];
-        values.doctorId = values.doctorId[1];
-      } else {
-        values.hospitalId = userInfo.hospitalId;
-      }
-      values.roomsId = values.roomsId[0];
-      values.bedId = values.roomsId[1];
+      setIsModalOpen(false); // 关闭弹窗
       if (props.info && Object.keys(props.info).length > 0) {
         const updateValues = {
           id: props.info.id,
@@ -57,21 +58,26 @@ const FormDoctor = (props: any) => {
           // 修改成功
           message.success('修改成功');
           form.resetFields(); // 提交成功后重置表单
-          setIsModalOpen(false); // 关闭弹窗
           await props.refresh(); // 刷新用户列表
         } else {
           message.error('修改失败');
         }
       } else {
+        if (userInfo.roleId === 1) {
+          values.hospitalId = values.doctorId[0];
+          values.doctorId = values.doctorId[1];
+        } else {
+          values.hospitalId = userInfo.hospitalId;
+        }
+        values.roomsId = values.room[0];
+        values.bedId = values.room[1];
+        values.admissionDate = values.admissionDate.format('YYYY-MM-DD');
         const res = await addHospitalManage(values);
         if (res.code === 200) {
           // 添加成功
           message.success('添加成功');
           form.resetFields(); // 提交成功后重置表单
-          setIsModalOpen(false); // 关闭弹窗
           await props.refresh(); // 刷新用户列表
-        } else {
-          message.error('添加失败');
         }
       }
     } finally {
@@ -181,9 +187,9 @@ const FormDoctor = (props: any) => {
                   ))}
                 </Select>
               </Form.Item>
-              {/* <Form.Item
+              <Form.Item
                 label="病房"
-                name="roomsId"
+                name="room"
                 rules={[{ required: true, message: '请选择入住病房' }]}
               >
                 <Cascader
@@ -191,7 +197,25 @@ const FormDoctor = (props: any) => {
                   onChange={onChange}
                   placeholder="请选择入住病房"
                 />
-              </Form.Item> */}
+              </Form.Item>
+              <Form.Item
+                label="入院日期"
+                name="admissionDate"
+                rules={[{ required: true, message: '请选择入院日期' }]}
+              >
+                <DatePicker style={{ width: '100%' }} />
+              </Form.Item>
+              <Form.Item
+                label="住院状态"
+                name="status"
+                rules={[{ required: true, message: '请选择住院状态' }]}
+              >
+                <Select placeholder="请选择住院状态">
+                  <Select.Option value={1}>住院中</Select.Option>
+                  <Select.Option value={2}>已出院</Select.Option>
+                  <Select.Option value={3}>已转院</Select.Option>
+                </Select>
+              </Form.Item>
             </>
           )}
           {props.info && Object.keys(props.info).length > 0 && (

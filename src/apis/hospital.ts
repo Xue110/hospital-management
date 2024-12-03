@@ -81,7 +81,115 @@ export const deleteHospitalManage = (id: number) => {
 // 批量删除住院信息
 export const deleteHospitalManageBatch = (ids: number[]) => {
   return request({
-    url: `/admin/hospital/inpatient/delete/batchDelete?ids=${ids}`,
+    url: `/admin/hospital/inpatient/batchDelete?ids=${ids}`,
+    method: "DELETE",
+  });
+}
+
+// 获取挂号记录列表
+export const getRegisterList = (data: any) => {
+  return request({
+    url: "/admin/hospital/registration/limit",
+    method: "POST",
+    data
+  });
+}
+// 添加挂号记录
+export const addRegister = (data: any) => {
+  return request({
+    url: "/admin/hospital/registration/add",
+    method: "POST",
+    data
+  });
+}
+// 修改挂号记录
+export const updateRegister = (data: any) => {
+  return request({
+    url: "/admin/hospital/registration/update",
+    method: "PUT",
+    data
+  });
+}
+// 删除单个挂号记录
+export const deleteRegister = (id: number) => {
+  return request({
+    url: `/admin/hospital/registration/delete/${id}`,
+    method: "DELETE",
+  });
+}
+// 批量删除挂号记录
+export const deleteRegisterBatch = (ids: number[]) => {
+  return request({
+    url: `/admin/hospital/registration/batchDelete?ids=${ids}`,
+    method: "DELETE",
+  });
+}
+
+// 获取药品列表
+export const getMedicationList = (data: any) => {
+  return request({
+    url: `/admin/hospital/medication/page?page=${data.page}&pageSize=${data.pageSize}`,
+    method: "GET",
+  });
+}
+// 添加药品
+export const addMedication = (data: any) => {
+  return request({
+    url: "/admin/hospital/medication/add",
+    method: "POST",
+    data
+  });
+}
+// 修改药品
+export const updateMedication = (data: any) => {
+  return request({
+    url: "/admin/hospital/medication/update",
+    method: "PUT",
+    data
+  });
+}
+// 删除单个药品
+export const deleteMedication = (id: number) => {
+  return request({
+    url: `/admin/hospital/medication/delete/${id}`,
+    method: "DELETE",
+  });
+}
+// 批量删除药品
+export const deleteMedicationBatch = (ids: number[]) => {
+  return request({
+    url: `/admin/hospital/medication/batchDelete?ids=${ids}`,
+    method: "DELETE",
+  });
+}
+
+// 获取病房列表
+export const getWardList = (data: any) => {
+  return request({
+    url: `/admin/hospital/rooms/page?page=${data.page}&pageSize=${data.pageSize}`,
+    method: "GET",
+  });
+}
+// 添加病房
+export const addWard = (data: any) => {
+  return request({
+    url: "/admin/hospital/rooms/add",
+    method: "POST",
+    data
+  });
+}
+// 修改病房
+export const updateWard = (data: any) => {
+  return request({
+    url: "/admin/hospital/rooms/update",
+    method: "PUT",
+    data
+  });
+}
+// 删除单个病房
+export const deleteWard = (id: number) => {
+  return request({
+    url: `/admin/hospital/rooms/delete/${id}`,
     method: "DELETE",
   });
 }

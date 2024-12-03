@@ -56,17 +56,17 @@ const Search = (props: any) => {
                 </Form.Item>
               </Col>
               {/* 病房名选择框 */}
-              {/* <Col span={8}>
+              <Col span={8}>
             <Form.Item name="roomsId" label="病房">
               <Select placeholder="请选择病房">
                 {hospitalData.roomsCounts.map((rooms: any) => (
                   <Select.Option key={rooms.id} value={rooms.id}>
-                    {rooms.name}
+                    {rooms.number}
                   </Select.Option>
                 ))}
               </Select>
             </Form.Item>
-          </Col> */}
+          </Col>
               <Col span={2}></Col>
             </Row>
             <Row
@@ -125,7 +125,7 @@ const Search = (props: any) => {
                 </Form.Item>
               </Col>
               {/* 病房名选择框 */}
-              {/* <Col span={7}>
+              <Col span={7}>
             <Form.Item name="roomsId" label="病房">
               <Select placeholder="请选择病房">
                 {hospitalData.roomsCounts.map((rooms: any) => (
@@ -135,7 +135,7 @@ const Search = (props: any) => {
                 ))}
               </Select>
             </Form.Item>
-          </Col> */}
+          </Col>
               {/* 住院状态选择框 */}
               <Col span={7}>
                 <Form.Item name="status" label="住院状态">

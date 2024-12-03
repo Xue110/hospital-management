@@ -8,11 +8,12 @@ import {
   Card,
   Col,
   Row,
+  Tooltip,
 } from 'antd';
 import './index.scss';
 import { DeleteOutlined, EyeOutlined, FormOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
-import { deleteHospitalManage, deleteHospitalManageBatch } from '../../../../apis/hospital';
+import { deleteMedication, deleteMedicationBatch } from '../../../../apis/hospital';
 
 const TableComponent = (props: any) => {
   // 表格数据
@@ -35,64 +36,51 @@ const TableComponent = (props: any) => {
   // 表格列
   const columns = [
     {
-      title: '住院记录ID',
+      title: '药品ID',
       dataIndex: 'id',
       key: 'id',
       width: '8%',
     },
     {
-      title: '患者名',
-      dataIndex: 'patientName',
-      key: 'patientName',
-      width: '8%',
+      title: '药品名称',
+      dataIndex: 'name',
+      key: 'name',
+      width: '10%',
     },
     {
-      title: '床位号',
-      dataIndex: 'number',
-      key: 'numbaer',
-      render: (number: any) => {
-        return <Tag color={'blue'}>{number}</Tag>;
+      title: '药品描述',
+      dataIndex: 'description',
+      key: 'description',
+      width: '15%',
+      ellipsis: {
+        showTitle: false,
       },
-      width: '8%',
+      render: (description: any) => (
+        <Tooltip placement="topLeft" title={description}>
+          {description}
+        </Tooltip>
+      ),
     },
     {
-      title: '负责医生',
-      dataIndex: 'doctorName',
-      key: 'doctorName',
-      width: '8%',
+      title: '药品价格',
+      dataIndex: 'price',
+      key: 'price',
+      width: '10%',
+      render: (price: any) => <Tag color="green">{price}元</Tag>,
     },
     {
-      title: '科室',
-      dataIndex: 'departmentName',
-      key: 'departmentName',
-      width: '8%',
-      render: (departmentName: any) => {
-        return <Tag color={'orange'}>{departmentName}</Tag>;
-      },
+      title: '药品库存',
+      dataIndex: 'stock',
+      key: 'stock',
+      width: '10%',
+      render: (stock: any) => <Tag color="orange">{stock}</Tag>,
     },
     {
-      title: '所在医院',
-      dataIndex: 'hospitalName',
-      key: 'hospitalName',
-      width: '8%',
-      render: (hospitalName: any) => {
-        return <Tag color={'purple'}>{hospitalName}</Tag>;
-      },
-    },
-    {
-      title: '紧急联系人',
-      dataIndex: 'patientContact',
-      key: 'patientContact',
-      width: '12%',
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-      width: '8%',
-      render: (status: any) => {
-        return status === 1 ? <Tag color={'green'}>住院中</Tag> : status === 2 ? <Tag color={'red'}>已出院</Tag> : <Tag color={'orange'}>已转院</Tag>;
-      }
+      title: '药品供应商',
+      dataIndex: 'supplier',
+      key: 'supplier',
+      width: '10%',
+      render: (supplier: any) => <Tag color="blue">{supplier}</Tag>,
     },
     {
       title: '操作',
@@ -135,15 +123,15 @@ const TableComponent = (props: any) => {
     props.onTableChange(pagination);
   };
 
-  // 查看订单详情
+  // 查看药品详情
   const viewDetails = (record: any) => {
     setDetailData(record);
     showDrawer();
   };
 
-  // 删除订单
+  // 删除药品
   const handleDelete = async (record: any) => {
-    const res = await deleteHospitalManage(record.id);
+    const res = await deleteMedication(record.id);
     if (res.code === 200) {
       message.success('删除成功');
       if (dataSource.length === 1 && props.pagination.page > 1) {
@@ -155,13 +143,13 @@ const TableComponent = (props: any) => {
       message.error('删除失败');
     }
   };
-  // 编辑订单
+  // 编辑药品
   const handleEdit = (record: any) => {
     props.onEdit(record);
   };
   // 批量删除
   const handleBatchDelete = async () => {
-    const res = await deleteHospitalManageBatch(selectedRowIds);
+    const res = await deleteMedicationBatch(selectedRowIds);
     if (res.code === 200) {
       message.success('删除成功');
       if (
@@ -192,58 +180,38 @@ const TableComponent = (props: any) => {
   };
   return (
     <div className="order-table">
-      <Drawer title="住院详情" onClose={onClose} open={open} width={600}>
+      <Drawer title="药品详情" onClose={onClose} open={open} width={600}>
         <Card bordered={false}>
           <Row gutter={24}>
-            {/* 住院ID */}
+            {/* 药品ID */}
             <Col span={12}>
-              <Title level={5}>住院记录ID</Title>
+              <Title level={5}>药品ID</Title>
               <p>{detailData?.id}</p>
             </Col>
-            {/* 住院名称 */}
+            {/* 药品名称 */}
             <Col span={12}>
-              <Title level={5}>患者名</Title>
-              <p>{detailData?.patientName}</p>
+              <Title level={5}>药品名</Title>
+              <p>{detailData?.name}</p>
             </Col>
-            {/* 住院时间 */}
+            {/* 药品价格 */}
             <Col span={12}>
-              <Title level={5}>住院时间</Title>
-              <p>{detailData?.admissionDate}</p>
+              <Title level={5}>药品价格</Title>
+              <p>{detailData?.price}</p>
             </Col>
-            {/* 出院时间 */}
+            {/* 药品库存 */}
             <Col span={12}>
-              <Title level={5}>出院时间</Title>
-              <p>{detailData?.dischargeDate}</p>
+              <Title level={5}>药品库存</Title>
+              <p>{detailData?.stock}</p>
             </Col>
-            {/* 住院状态 */}
+            {/* 药品供应商 */}
             <Col span={12}>
-              <Title level={5}>住院状态</Title>
-              <p>{detailData?.status === 1 ? '住院中' : detailData?.status === 2 ? '已出院' : '已转院'}</p>
+              <Title level={5}>药品供应商</Title>
+              <p>{detailData?.supplier}</p>
             </Col>
-            {/* 病床号 */}
-            <Col span={12}>
-              <Title level={5}>病床号</Title>
-              <p>{detailData?.number}</p>
-            </Col>
-            {/* 负责医生 */}
-            <Col span={12}>
-              <Title level={5}>负责医生</Title>
-              <p>{detailData?.doctorName}医生</p>
-            </Col>
-            {/* 住院科室 */}
-            <Col span={12}>
-              <Title level={5}>所在科室</Title>
-              <p>{detailData?.departmentName}</p>
-            </Col>
-            {/* 所在医院 */}
-            <Col span={12}>
-              <Title level={5}>所在医院</Title>
-              <p>{detailData?.hospitalName}</p>
-            </Col>
-            {/* 紧急联系人电话 */}
-            <Col span={12}>
-              <Title level={5}>紧急联系人电话</Title>
-              <p>{detailData?.patientContact}</p>
+            {/* 药品描述 */}
+            <Col span={24}>
+              <Title level={5}>药品描述</Title>
+              <p>{detailData?.description}</p>
             </Col>
           </Row>
         </Card>
