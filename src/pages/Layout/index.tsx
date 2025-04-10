@@ -84,7 +84,7 @@ const iconMap: { [key: string]: React.ReactNode } = {
   examination: <FormOutlined />,
   xxx: <ScheduleOutlined />,
   profile: <UserOutlined />,
-  yyyy:<ShopOutlined />,
+  yyyy: <ShopOutlined />,
 };
 // 递归映射菜单项
 
@@ -128,12 +128,6 @@ const App: React.FC = () => {
   const {
     token: { borderRadiusLG },
   } = theme.useToken();
-  useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(getHospitalData());
-    };
-    fetchData();
-  }, []);
   // 从 localStorage 或 sessionStorage 恢复路由状态
   useEffect(() => {
     const savedPath = localStorage.getItem('currentPath');
@@ -196,7 +190,8 @@ const App: React.FC = () => {
   // 触发个人用户信息action
   useEffect(() => {
     dispatch(fetchUserInfo());
-  }, [dispatch]);
+    dispatch(getHospitalData());
+  }, []);
 
   const userInfo = useSelector((state: any) => state.user.userInfo);
 
@@ -205,7 +200,6 @@ const App: React.FC = () => {
     if (userInfo && userInfo.roleId) {
       const fetchPath = async () => {
         const res = await getPathAPI(userInfo.roleId);
-        console.log(res.data);
         setItems(res.data);
       };
       fetchPath();
@@ -221,8 +215,11 @@ const App: React.FC = () => {
   const onConfirm = () => {
     dispatch(clearUserInfo());
     navigate('/login');
+    localStorage.removeItem('id');
+    localStorage.removeItem('isRemPwd');
   };
-  const name = userInfo.username || '未登录';
+  const name =
+    userInfo.username || localStorage.getItem('username') || '未登录';
   return (
     <Layout style={{ minHeight: '100vh', minWidth: '100vw', overflow: 'auto' }}>
       <Sider

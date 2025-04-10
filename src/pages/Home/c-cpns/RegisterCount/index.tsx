@@ -4,7 +4,7 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { CountUp } from 'countup.js';
 const RegisterCount = (props:any) => {
-  const [register, setRegister] = useState(2000);
+  const [register, setRegister] = useState(null);
   useEffect(() => {
     setRegister(props.registerNum)
   },[props.registerNum])
@@ -13,7 +13,7 @@ const RegisterCount = (props:any) => {
     document.documentElement.scrollLeft = document.documentElement.clientWidth;
   }, []);
   useEffect(() => {
-    const countUp = new CountUp('registerCount',register);
+    const countUp = new CountUp('registerCount',Number(register));
     if (!countUp.error) {
         countUp.start();
     }

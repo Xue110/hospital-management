@@ -113,7 +113,7 @@ const FormDoctor = (props: any) => {
         }
       } else {
         if (userInfo.roleId !== 1) {
-          values.hospitalId = userInfo.hospitalId;
+          values.hospitalId = userInfo.id;
         }
         const res = await addDoctor(values);
         if (res.code === 200) {

@@ -28,9 +28,9 @@ const AdOrder = (props: any) => {
     }
   }, [props.open]);
   useEffect(() => {
-    setUserList(props.userCounts);
-    setPatientList(props.patientCounts);
-  }, [props.layoutData, props.patientCounts, props.userCounts]);
+    setUserList(hospitalData.userCounts);
+    setPatientList(hospitalData.patientCounts);
+  }, []);
   // 提交表单数据
   const handleOk = async () => {
     try {
@@ -40,7 +40,7 @@ const AdOrder = (props: any) => {
         values.hospitalId = values.doctorId[0];
         values.doctorId = values.doctorId[1];
       }else{
-        values.hospitalId = userInfo.hospitalId;
+        values.hospitalId = userInfo.id;
       }
       values.total = Number(values.total);
       console.log(values);
@@ -143,14 +143,14 @@ const AdOrder = (props: any) => {
             name="doctorId"
             rules={[{ required: true, message: '请选择医生' }]}
           >
-            {userInfo.role === 1 && (
+            {userInfo.roleId === 1 && (
               <Cascader
                 options={optionsData}
                 onChange={onChange}
                 placeholder="请选择医生"
               />
             )}
-            {userInfo.role === 2 && (
+            {userInfo.roleId === 2 && (
               <Select placeholder="请选择主治医师">
                 {hospitalData.doctorCounts.map((doctor: any) => (
                   <Select.Option key={doctor.id} value={doctor.id}>

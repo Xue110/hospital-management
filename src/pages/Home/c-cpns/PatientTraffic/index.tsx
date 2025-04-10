@@ -9,11 +9,10 @@ const formatDate = (date:Date) => {
   return `${month}-${day}`;
 };
 
-const PatientTraffic = () => {
+const PatientTraffic = (props: any) => {
   useEffect(() => {
     // 获取今天的日期
     const today = new Date();
-    
     // 生成过去7天的日期
     const days = [];
     for (let i = 0; i < 7; i++) {
@@ -47,7 +46,7 @@ const PatientTraffic = () => {
           name: '患者流量',
           type: 'line',
           smooth: true, // 平滑曲线
-          data: [120, 200, 150, 80, 70, 110, 130], // 模拟数据
+          data: props.number,
           lineStyle: {
             width: 3,
           },
@@ -70,7 +69,7 @@ const PatientTraffic = () => {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center',marginTop: '80px'}}>
-      <div id="patient-traffic-chart" style={{ width: '700px', height: '400px' }}></div>
+      <div id="patient-traffic-chart" style={{ width: '1200px', height: '400px' }}></div>
     </div>
   );
 };

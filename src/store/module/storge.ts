@@ -8,7 +8,15 @@ const hospitalStore = createSlice({
   name: 'hospital',
   //数据状态
   initialState: {
-    hospitalList: getHospital() || [],
+    hospitalList: getHospital() || {
+      hospitalCounts:[], //医院数据
+      doctorCounts:[], //医生数据
+      patientCounts: [], //患者数据
+      userCounts: [], //用户数据
+      departmentCounts: [], //科室数据
+      roomsCounts: [], //病床数据
+      bedCounts: [], //床位数据
+    },
   },
   //修改数据的方法
   reducers: {
@@ -34,7 +42,6 @@ const getHospitalData = () => {
     dispatch(setHospitalList(res.data));
   };
 };
-
 export {
   setHospitalList,
   removeHospitalList,

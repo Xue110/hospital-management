@@ -10,7 +10,6 @@ const Ward = () => {
       id:1,
       number: '301', //病房号
       departmentId: 1, // 科室id
-      departmentName: '内科', // 科室名称
       fee: 1000, // 住院费用
       totalBeds: 10, // 总床位数
       availableBeds: 5, // 可用床位数

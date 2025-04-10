@@ -61,7 +61,7 @@ const TableComponent = (props: any) => {
       title: '科室',
       dataIndex: 'departmentName',
       key: 'departmentName',
-      width: '8%',
+      width: '5%',
       render: (departmentName: any) => {
         return <Tag color={'orange'}>{departmentName}</Tag>;
       },
@@ -70,7 +70,7 @@ const TableComponent = (props: any) => {
       title: '所在医院',
       dataIndex: 'hospitalName',
       key: 'hospitalName',
-      width: '8%',
+      width: '10%',
       render: (hospitalName: any) => {
         return <Tag color={'purple'}>{hospitalName}</Tag>;
       },

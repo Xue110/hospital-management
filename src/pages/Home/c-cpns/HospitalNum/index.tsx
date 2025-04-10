@@ -3,7 +3,7 @@ import * as echarts from 'echarts';
 import './index.scss';
 
 // 创建 HospitalNum 组件
-const HospitalNum = () => {
+const HospitalNum = (props: any) => {
   // 定义状态变量来存储地图数据
   const [mapData, setMapData] = useState<any>(null);
 
@@ -38,23 +38,14 @@ const HospitalNum = () => {
     echarts.registerMap('吉林', mapData);
 
     // 需要展示的数据：各地区医院数量
-    const hospitalData = [
-      { name: '长春市', value: 9 },
-      { name: '吉林市', value: 4 },
-      { name: '四平市', value: 2 },
-      { name: '辽源市', value: 4 },
-      { name: '通化市', value: 3 },
-      { name: '白山市', value: 5 },
-      { name: '松原市', value: 7 },
-      { name: '白城市', value: 2 },
-      { name: '延边朝鲜族自治州', value: 1 },
-    ];
+    const hospitalData = props.number
+    console.log(hospitalData,"我来看看怎么个事")
 
     // 配置 ECharts 地图图表
     const option = {
       title: {
         text: '吉林省各地区医院数量',
-        subtext: '数据来源：示例数据',
+        subtext: '数据来源：李欣雨',
         left: 'center',
         textStyle: {
           fontSize: 20,

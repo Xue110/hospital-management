@@ -3,8 +3,11 @@ import './index.scss';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
 import React, { useEffect, useState } from 'react';
 import { CountUp } from 'countup.js';
-const PatientCount = () => {
-  const [register] = useState(800);
+const PatientCount = (props:any) => {
+  const [register,setRegister] = useState(0);
+  useEffect(() =>{
+    setRegister(props.number)
+  },[props.number])
   React.useEffect(() => {
     document.documentElement.scrollTop = document.documentElement.clientHeight;
     document.documentElement.scrollLeft = document.documentElement.clientWidth;

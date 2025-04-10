@@ -8,8 +8,9 @@ export const getPathAPI = (roleId: number) => {
 }
 // 获取数据列表
 export const getLayoutAPI = () => {
+    const id = localStorage.getItem("id")
     return request({
-        url: "/admin/counts",
+        url: `/admin/counts/${id}`,
         method: "GET",
     })
 }

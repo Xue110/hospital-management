@@ -5,7 +5,9 @@ import FormDoctor from './Form';
 import Search from './Search';
 import TableComponent from './Table';
 import { getHospitalManageList } from '../../../apis/hospital';
+import { useSelector } from 'react-redux';
 const InHospital = () => {
+  const userInfo = useSelector((state: any) => state.user.userInfo);
   const [data, setData] = useState<any[]>([
     {
       id:1,
@@ -54,7 +56,7 @@ const InHospital = () => {
       pageSize: pagination.pageSize,
       patientId: filterData?.patientId,
       roomsId: filterData?.roomsId,
-      hospitalId: filterData?.hospitalId,
+      hospitalId: userInfo.roleId === 1 ? filterData?.hospitalId : userInfo.id,
       status: filterData?.status,
     };
     const res = await getHospitalManageList(data);

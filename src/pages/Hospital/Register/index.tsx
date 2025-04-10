@@ -5,6 +5,7 @@ import FormDoctor from './Form';
 import Search from './Search';
 import TableComponent from './Table';
 import { getRegisterList } from '../../../apis/hospital';
+import { useSelector } from 'react-redux';
 const Register = () => {
   const [data, setData] = useState<any[]>([
     {
@@ -27,6 +28,7 @@ const Register = () => {
       endTime: '2023-02-02 08:30:00' // 结束挂号时间
     },
   ]);
+  const userInfo = useSelector((state: any) => state.user.userInfo);
   const [open, setOpen] = useState<number>(0);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -54,7 +56,7 @@ const Register = () => {
       patientId: filterData?.patientId,
       doctorId: filterData?.doctorId,
       departmentId: filterData?.departmentId,
-      hospitalId: filterData?.hospitalId,
+      hospitalId: userInfo.roleId === 2 ? userInfo.id : filterData?.hospitalId,
       startTime: filterData?.startTime,
       endTime: filterData?.endTime,
     };

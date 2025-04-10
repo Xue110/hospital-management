@@ -2,16 +2,17 @@ import { useEffect, useRef } from 'react';
 import * as echarts from 'echarts';
 import './index.scss';
 
-const PatientsNum = () => {
+const PatientsNum = (props:any) => {
   const chartRef = useRef(null);  // 用于引用图表的 DOM 容器
 
   useEffect(() => {
     const chart = echarts.init(chartRef.current);  // 初始化 ECharts 实例
-
+    const hospital = props.number.map((item:any) => item.name);
+    const data = props.number.map((item:any) => item.value);
     const option = {
       title: {
         text: '吉林省内医院患者数量',
-        subtext: '数据来源：假设数据',
+        subtext: '数据来源：李欣雨',
         left: 'center',
       },
       tooltip: {
@@ -24,11 +25,11 @@ const PatientsNum = () => {
         top: '20%',
         left: '10%',
         right: '10%',
-        bottom: '10%',
+        bottom: '20%',
       },
       xAxis: {
         type: 'category',
-        data: ['医院A', '医院B', '医院C', '医院D', '医院E'],  // 模拟医院名称
+        data: hospital,
         axisLabel: {
           interval: 0,  // 确保所有医院名称都能显示
           rotate: 30,  // 旋转标签，防止重叠
@@ -42,7 +43,7 @@ const PatientsNum = () => {
         {
           name: '患者数量',
           type: 'bar',  // 使用柱状图
-          data: [1200, 2300, 1800, 1500, 2500],  // 模拟患者数量数据
+          data: data,  // 模拟患者数量数据
           itemStyle: {
             color: '#4e8ef7',
           },
@@ -62,7 +63,7 @@ const PatientsNum = () => {
     <div className="patients-num">
       <div
         ref={chartRef}  // 图表的容器
-        style={{ width: '600px', height: '400px' }}
+        style={{ width: '600px', height: '450px' }}
       ></div>
     </div>
   );

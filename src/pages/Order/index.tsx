@@ -1,12 +1,12 @@
-import { Button, Card, message, Space } from 'antd';
+import { Button, Card, Space } from 'antd';
 import './index.scss';
 import Search from './c-cpns/search';
 import Table from './c-cpns/table';
 import { useCallback, useEffect, useState } from 'react';
-import { DataType, Doctor, filterType, Hospital } from '../../type/order';
+import { DataType, filterType } from '../../type/order';
 import { getOrderList } from '../../apis/order';
 import AdOrder from './c-cpns/AdOrder';
-import { getLayoutAPI } from '../../apis/layout';
+import { useSelector } from 'react-redux';
 const Order = () => {
   const [data, setData] = useState<DataType[]>([
     {
@@ -25,6 +25,7 @@ const Order = () => {
       updateTime: '2023-01-01 10:00:00',
     },
   ]);
+  const userInfo = useSelector((state: any) => state.user.userInfo);
   const [open, setOpen] = useState<number>(0);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -34,11 +35,6 @@ const Order = () => {
   const [filterData, setFilterData] = useState<filterType>();
   //删除次数
   const [deleteNum, setDeleteNum] = useState(0);
-  // 获取医院和医生和用户和患者以及医院下的医生
-  const [hospitalCounts, setHospitalCounts] = useState<Hospital[]>([]);
-  const [doctorCounts, setDoctorCounts] = useState<Doctor[]>([]);
-  const [userCounts, setUserCounts] = useState<Doctor[]>([]);
-  const [patientCounts, setPatientCounts] = useState<Doctor[]>([]);
   // 新增订单
   const handleClick = () => {
     setOpen(open + 1);
@@ -53,7 +49,8 @@ const Order = () => {
       page: pagination.page,
       pageSize: pagination.pageSize,
       id: filterData?.id,
-      hospitalId: filterData?.hospitalId,
+      hospitalId:
+        userInfo.roleId === 1 ? filterData?.hospitalId : userInfo.id,
       paymentStatus: filterData?.paymentStatus,
     };
     const res = await getOrderList(data);
@@ -62,7 +59,7 @@ const Order = () => {
       page: pagination.page,
       pageSize: pagination.pageSize,
       total: res.data.total,
-    })
+    });
   };
   // 分页变更处理函数
   const handleTableChange = (pagination: any) => {
@@ -83,36 +80,19 @@ const Order = () => {
   const refresh = useCallback(() => {
     getData();
   }, [pagination.page, pagination.pageSize, filterData]);
-  // 获取列表信息
-  const getOrderInfo = async () => {
-    const res = await getLayoutAPI();
-    if (res.code === 200) {
-      // 获取成功
-      console.log(res.data.patientCounts);
-      setUserCounts(res.data.userCounts);
-      setPatientCounts(res.data.patientCounts);
-      setHospitalCounts(res.data.hospitalCounts);
-      setDoctorCounts(res.data.doctorCounts);
-    } else {
-      message.error('获取失败');
-    }
+  //修改分页器数据
+  const paginationCount = () => {
+    setPagination({
+      page: pagination.page - 1,
+      pageSize: pagination.pageSize,
+      total: data.length,
+    });
   };
-  useEffect(() => {
-    getOrderInfo();
-  }, []);
-    //修改分页器数据
-    const paginationCount = (() => {
-      setPagination({
-        page: pagination.page-1,
-        pageSize: pagination.pageSize,
-        total: data.length,
-      });
-    })
   return (
     <>
-      <AdOrder open={open} refresh={refresh} userCounts={userCounts} patientCounts={patientCounts}/>
+      <AdOrder open={open} refresh={refresh} />
       <Card title="筛选订单">
-        <Search onFilterChange={handleFilterChange} hospitalCounts={hospitalCounts} />
+        <Search onFilterChange={handleFilterChange} />
       </Card>
       <Card
         title="订单列表"
@@ -144,10 +124,6 @@ const Order = () => {
           onTableChange={handleTableChange}
           deleteNum={deleteNum}
           refresh={refresh}
-          userCounts={userCounts}
-          patientCounts={patientCounts}
-          hospitalCounts={hospitalCounts}
-          doctorCounts={doctorCounts}
           paginationCount={paginationCount}
         />
       </Card>

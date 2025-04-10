@@ -16,10 +16,7 @@ import {
   UploadProps,
 } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
-import { 
-  cityList,
-  qualificationList,
-} from '../../utils/data';
+import { cityList, qualificationList } from '../../utils/data';
 import { useSelector } from 'react-redux';
 type FileType = Parameters<GetProp<UploadProps, 'beforeUpload'>>[0];
 const getBase64 = (file: FileType): Promise<string> =>
@@ -63,7 +60,7 @@ const Profile = () => {
       message.success('修改成功');
       getUserInfo();
     } else {
-      message.error( '修改失败');
+      message.error('修改失败');
     }
   };
 
@@ -219,7 +216,7 @@ const Profile = () => {
             </Form.Item>
             <Form.Item
               label="名称"
-              name="username"
+              name="name"
               rules={[
                 { ...rules },
                 { max: 20, message: '医院名称最多20个字符' },
@@ -288,7 +285,7 @@ const Profile = () => {
             </Form.Item>
             <Form.Item label="所在城市" name="citiesId">
               <Select placeholder="请选择城市">
-              {cityList.map((city) => (
+                {cityList.map((city) => (
                   <Select.Option key={city.id} value={city.id}>
                     {city.name}
                   </Select.Option>
@@ -322,11 +319,15 @@ const Profile = () => {
             <Form.Item label="医生照片" name="image">
               <div>
                 <Upload
+                  name="image"
                   action="https://localhost:8077/admin/upload"
                   listType="picture-card"
                   fileList={fileList}
                   onPreview={handlePreview}
                   onChange={handleChange}
+                  headers={{
+                    token: localStorage.getItem('token')!,
+                  }}
                 >
                   {fileList.length >= 1 ? null : uploadButton}
                 </Upload>
@@ -365,7 +366,7 @@ const Profile = () => {
               <Input type="text" />
             </Form.Item>
             <Form.Item
-              label="费用"
+              label="挂号费用"
               name="fee"
               rules={[
                 { ...rules },
@@ -376,7 +377,7 @@ const Profile = () => {
             </Form.Item>
             <Form.Item label="科室" name="departmentId" rules={[{ ...rules }]}>
               <Select placeholder="请选择科室">
-                {hospitalData.departmentCounts.map((department:any) => (
+                {hospitalData.departmentCounts.map((department: any) => (
                   <Select.Option key={department.id} value={department.id}>
                     {department.name}
                   </Select.Option>
@@ -391,19 +392,6 @@ const Profile = () => {
                     value={qualification.name}
                   >
                     {qualification.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="所属医院"
-              name="hospitalId"
-              rules={[{ ...rules }]}
-            >
-              <Select placeholder="请选择所属医院">
-                {hospitalData.hospitalConuts.map((hospital:any) => (
-                  <Select.Option key={hospital.id} value={hospital.id}>
-                    {hospital.name}
                   </Select.Option>
                 ))}
               </Select>

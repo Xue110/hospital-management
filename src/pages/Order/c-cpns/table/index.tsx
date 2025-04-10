@@ -135,9 +135,9 @@ const TableComponent: React.FC<TableProps> = (props) => {
       dataIndex: 'hospitalId',
       key: 'hospitalId',
       render: (text: any) => {
-        return hospitalData.hospitalCounts.find((item: any) => item.id === text)?.name;
-      }
-      ,
+        return hospitalData.hospitalCounts.find((item: any) => item.id === text)
+          ?.name;
+      },
     },
     {
       title: '创建时间',
@@ -195,9 +195,9 @@ const TableComponent: React.FC<TableProps> = (props) => {
     const res = await deleteOrder(record.id);
     if (res.code === 200) {
       message.success('删除成功');
-      if(dataSource.length === 1 && props.pagination.page > 1) {
-        props.paginationCount()
-      }else{
+      if (dataSource.length === 1 && props.pagination.page > 1) {
+        props.paginationCount();
+      } else {
         props.refresh();
       }
     } else {
@@ -214,9 +214,12 @@ const TableComponent: React.FC<TableProps> = (props) => {
     const res = await batchDeleteOrder(selectedRowIds);
     if (res.code === 200) {
       message.success('删除成功');
-      if(dataSource.length === selectedRowIds.length && props.pagination.page > 1) {
-        props.paginationCount()
-      }else{
+      if (
+        dataSource.length === selectedRowIds.length &&
+        props.pagination.page > 1
+      ) {
+        props.paginationCount();
+      } else {
         props.refresh();
       }
     } else {
@@ -282,108 +285,108 @@ const TableComponent: React.FC<TableProps> = (props) => {
         </Form>
       </Modal>
       <Drawer title="订单详情" onClose={onClose} open={open} width={600}>
-      <Card bordered={false}>
-        <Row gutter={24}>
-          {/* 订单编号 */}
-          <Col span={12}>
-            <Title level={5}>订单编号</Title>
-            <p>{detailData?.id}</p>
-          </Col>
+        <Card bordered={false}>
+          <Row gutter={24}>
+            {/* 订单编号 */}
+            <Col span={12}>
+              <Title level={5}>订单编号</Title>
+              <p>{detailData?.id}</p>
+            </Col>
 
-          {/* 订单日期 */}
-          <Col span={12}>
-            <Title level={5}>订单日期</Title>
-            <p>{detailData?.date}</p>
-          </Col>
+            {/* 订单日期 */}
+            <Col span={12}>
+              <Title level={5}>订单日期</Title>
+              <p>{detailData?.date}</p>
+            </Col>
 
-          {/* 支付状态 */}
-          <Col span={12}>
-            <Title level={5}>支付状态</Title>
-            <p>
-              {detailData?.paymentStatus === 1
-                ? '未支付'
-                : detailData?.paymentStatus === 2
-                ? '已支付'
-                : detailData?.paymentStatus === 3
-                ? '已取消'
-                : '已超时'}
-            </p>
-          </Col>
+            {/* 支付状态 */}
+            <Col span={12}>
+              <Title level={5}>支付状态</Title>
+              <p>
+                {detailData?.paymentStatus === 1
+                  ? '未支付'
+                  : detailData?.paymentStatus === 2
+                  ? '已支付'
+                  : detailData?.paymentStatus === 3
+                  ? '已取消'
+                  : '已超时'}
+              </p>
+            </Col>
 
-          {/* 医生 */}
-          <Col span={12}>
-            <Title level={5}>负责医生</Title>
-            <p>
-              {
-                props.doctorCounts.find(
-                  (item) => Number(item.id) === detailData?.doctorId
-                )?.name
-              }
-            </p>
-          </Col>
+            {/* 医生 */}
+            <Col span={12}>
+              <Title level={5}>负责医生</Title>
+              <p>
+                {
+                  hospitalData.doctorCounts.find(
+                    (item: any) => Number(item.id) === detailData?.doctorId
+                  )?.name
+                }
+              </p>
+            </Col>
 
-          {/* 医院 */}
-          <Col span={12}>
-            <Title level={5}>医院</Title>
-            <p>
-              {
-                props.hospitalCounts.find(
-                  (item) => Number(item.id) === detailData?.hospitalId
-                )?.name
-              }
-            </p>
-          </Col>
+            {/* 医院 */}
+            <Col span={12}>
+              <Title level={5}>医院</Title>
+              <p>
+                {
+                  hospitalData.hospitalCounts.find(
+                    (item: any) => Number(item.id) === detailData?.hospitalId
+                  )?.name
+                }
+              </p>
+            </Col>
 
-          {/* 患者 */}
-          <Col span={12}>
-            <Title level={5}>患者姓名</Title>
-            <p>
-              {
-                props.patientCounts.find(
-                  (item) => Number(item.id) === detailData?.patientId
-                )?.name
-              }
-            </p>
-          </Col>
+            {/* 患者 */}
+            <Col span={12}>
+              <Title level={5}>患者姓名</Title>
+              <p>
+                {
+                  hospitalData.patientCounts.find(
+                    (item: any) => Number(item.id) === detailData?.patientId
+                  )?.name
+                }
+              </p>
+            </Col>
 
-          {/* 支付方式 */}
-          <Col span={12}>
-            <Title level={5}>支付方式</Title>
-            <p>
-              {detailData?.paymentMethod === 1
-                ? '支付宝'
-                : detailData?.paymentMethod === 2
-                ? '微信'
-                : '余额支付'}
-            </p>
-          </Col>
+            {/* 支付方式 */}
+            <Col span={12}>
+              <Title level={5}>支付方式</Title>
+              <p>
+                {detailData?.paymentMethod === 1
+                  ? '支付宝'
+                  : detailData?.paymentMethod === 2
+                  ? '微信'
+                  : '余额支付'}
+              </p>
+            </Col>
 
-          {/* 订单类型 */}
-          <Col span={12}>
-            <Title level={5}>订单类型</Title>
-            <p>
-              {detailData?.type === 1
-                ? '挂号'
-                : detailData?.type === 2
-                ? '住院'
-                : '其他'}
-            </p>
-          </Col>
+            {/* 订单类型 */}
+            <Col span={12}>
+              <Title level={5}>订单类型</Title>
+              <p>
+                {detailData?.type === 1
+                  ? '挂号'
+                  : detailData?.type === 2
+                  ? '住院'
+                  : '其他'}
+              </p>
+            </Col>
 
-          {/* 总金额 */}
-          <Col span={12}>
-            <Title level={5}>总金额</Title>
-            <p>{detailData?.total}</p>
-          </Col>
+            {/* 总金额 */}
+            <Col span={12}>
+              <Title level={5}>总金额</Title>
+              <p>{detailData?.total}</p>
+            </Col>
 
-          {/* 创建时间 */}
-          <Col span={12}>
-            <Title level={5}>创建时间</Title>
-            <p>{detailData?.createTime}</p>
-          </Col>
-        </Row>
-      </Card>
-    </Drawer>
+            {/* 创建时间 */}
+            <Col span={12}>
+              <Title level={5}>创建时间</Title>
+              <p>{detailData?.createTime}</p>
+            </Col>
+          </Row>
+        </Card>
+      </Drawer>
       <Table
         rowSelection={rowSelection}
         columns={columns}

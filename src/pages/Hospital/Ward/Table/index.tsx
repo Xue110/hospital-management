@@ -14,12 +14,15 @@ import './index.scss';
 import { DeleteOutlined, EyeOutlined, FormOutlined } from '@ant-design/icons';
 import Title from 'antd/es/typography/Title';
 import { deleteWard } from '../../../../apis/hospital';
+import { useSelector } from 'react-redux';
 
 const TableComponent = (props: any) => {
+  const hospitalData = useSelector((state: any) => state.hospital.hospitalList);
   // 表格数据
   const [dataSource, setDataSource] = useState<any[]>([]);
   // 详情数据
   const [detailData, setDetailData] = useState<any>();
+  console.log(detailData)
   const [open, setOpen] = useState(false);
   const showDrawer = () => {
     setOpen(true);
@@ -53,10 +56,10 @@ const TableComponent = (props: any) => {
     },
     {
       title: '科室',
-      dataIndex: 'departmentName',
-      key: 'departmentName',
-      render: (departmentName: any) => {
-        return <Tag color={'blue'}>{departmentName}</Tag>;
+      dataIndex: 'departmentId',
+      key: 'departmentId',
+      render: (departmentId: any) => {
+        return hospitalData.departmentCounts.find((item: any) => item.id === departmentId).name;
       },
       width: '8%',
     },
@@ -147,9 +150,9 @@ const TableComponent = (props: any) => {
       key: 'status',
       render: (status: any) =>
         status === 1 ? (
-          <Badge status="success" text="已入住" />
-        ) : status === 0 ? (
           <Badge status="default" text="未入住" />
+        ) : status === 2 ? (
+          <Badge status="success" text="已入住" />
         ) : (
           <Badge status="error" text="维修中" />
         ),
@@ -208,12 +211,12 @@ const TableComponent = (props: any) => {
             {/* 病房号 */}
             <Col span={12}>
               <Title level={5}>病房号</Title>
-              <p>{detailData?.Number}</p>
+              <p>{detailData?.number}</p>
             </Col>
             {/* 科室 */}
             <Col span={12}>
               <Title level={5}>科室</Title>
-              <p>{detailData?.departmentName}</p>
+              <p>{hospitalData.departmentCounts.find((item: any) => item.id === detailData?.departmentId)?.name}</p>
             </Col>
             {/* 床位数量 */}
             <Col span={12}>
@@ -243,9 +246,9 @@ const TableComponent = (props: any) => {
                   </p>
                   <p>
                     <strong>状态：</strong>
-                    {bed.status === '0'
+                    {bed.status === 1
                       ? '空闲'
-                      : bed.status === '1'
+                      : bed.status === 2
                       ? '已入住'
                       : '维修中'}
                   </p>

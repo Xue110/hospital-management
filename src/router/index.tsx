@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createHashRouter } from 'react-router-dom';
 import Login from '../pages/Login/index';
 import Layout from '../pages/Layout/index';
 import AuthRoute from '../components/AuthRoute';
@@ -24,7 +24,7 @@ import HospitalInfo from '../pages/Hospital/HospitalInfo';
 import Medical from '../pages/Hospital/medical';
 import Ward from '../pages/Hospital/Ward';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: <AuthRoute><Layout /></AuthRoute>,
@@ -46,11 +46,11 @@ const router = createBrowserRouter([
         element: <AuthRoute><Profile /></AuthRoute>
       },
       {
-        path: '/Reservation',
+        path: '/schedule',
         element: <AuthRoute><Reservation /></AuthRoute>
       },
       {
-        path: '/Scheduling',
+        path: '/schedules',
         element: <AuthRoute><Scheduling /></AuthRoute>
       },
       {
@@ -58,7 +58,7 @@ const router = createBrowserRouter([
         element: <AuthRoute><User /></AuthRoute>
       },
       {
-        path: 'Workforce',
+        path: '/registration',
         element: <AuthRoute><Workforce /></AuthRoute>
       },
       {

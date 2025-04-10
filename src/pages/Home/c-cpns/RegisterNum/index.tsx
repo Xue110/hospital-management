@@ -2,16 +2,9 @@ import { useEffect } from 'react';
 import * as echarts from 'echarts';
 import './index.scss';
 
-const RegisterNum = () => {
+const RegisterNum = (props:any) => {
   useEffect(() => {
-    // 模拟数据，可以替换成从后台获取的真实数据
-    const data = [
-      { name: '长春市人民医院', value: 250 },
-      { name: '吉林大学第一医院', value: 180 },
-      { name: '吉林省人民医院', value: 210 },
-      { name: '松原市中心医院', value: 130 },
-      { name: '德惠市医院', value: 100 },
-    ];
+    const data = props.number
 
     // 获取图表容器
     const chartDom = document.getElementById('registerNumChart');
@@ -21,7 +14,7 @@ const RegisterNum = () => {
     const option = {
       title: {
         text: '吉林省内医院今日挂号人数',
-        subtext: '数据来源：假设数据',
+        subtext: '数据来源：李欣雨',
         left: 'center',
       },
       tooltip: {
@@ -31,7 +24,7 @@ const RegisterNum = () => {
       legend: {
         orient: 'vertical',
         left: 'left',
-        data: data.map(item => item.name),
+        data: data.map((item:any) => item.name),
       },
       series: [
         {
@@ -40,7 +33,7 @@ const RegisterNum = () => {
           radius: ['20%', '70%'], // 内外半径，控制玫瑰图的形状
           center: ['50%', '50%'], // 图表的中心位置
           roseType: 'area', // 设置为玫瑰图
-          data: data.map(item => ({
+          data: data.map((item:any) => ({
             name: item.name,
             value: item.value,
           })),
@@ -66,7 +59,7 @@ const RegisterNum = () => {
 
   return (
     <div>
-      <div id="registerNumChart" style={{ width: '600px', height: '400px' }}></div>
+      <div id="registerNumChart" style={{ width: '1000px', height: '450px' }}></div>
     </div>
   );
 };

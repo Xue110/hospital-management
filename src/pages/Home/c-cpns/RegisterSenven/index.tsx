@@ -8,7 +8,7 @@ const formatDate = (date: Date) => {
   const day = date.getDate().toString().padStart(2, '0');
   return `${year}-${month}-${day}`;
 };
-const RegisterSenven = () => {
+const RegisterSenven = (props:any) => {
   useEffect(() => {
     // 获取今天的日期
     const today = new Date();
@@ -22,21 +22,9 @@ const RegisterSenven = () => {
     }
     // 模拟数据，可以替换成从后台获取的真实数据
     const data = {
-      hospitals: [
-        '长春市人民医院',
-        '吉林大学第一医院',
-        '吉林省人民医院',
-        '松原市中心医院',
-        '德惠市医院',
-      ],
+      hospitals: props.number.map((item:any) => item.name),
       dates: days,
-      values: [
-        [120, 132, 101, 134, 90, 230, 210], // 长春市人民医院
-        [220, 182, 191, 234, 290, 330, 310], // 吉林大学第一医院
-        [150, 232, 201, 154, 190, 330, 410], // 吉林省人民医院
-        [320, 332, 301, 334, 390, 330, 320], // 松原市中心医院
-        [120, 132, 101, 134, 90, 230, 210], // 德惠市医院
-      ],
+      values: props.number.map((item:any) => item.values),
     };
 
     // 获取图表容器
@@ -47,7 +35,7 @@ const RegisterSenven = () => {
     const option = {
       title: {
         text: '吉林省内医院七天挂号人数',
-        subtext: '数据来源：假设数据',
+        subtext: '数据来源：李欣雨',
         left: 'center',
         top: '20px',
       },
@@ -83,7 +71,7 @@ const RegisterSenven = () => {
         name: '挂号人数',
         min: 0,
       },
-      series: data.hospitals.map((hospital, index) => ({
+      series: data.hospitals.map((hospital:any, index:any) => ({
         name: hospital,
         type: 'line', // 折线图
         data: data.values[index],
@@ -113,7 +101,7 @@ const RegisterSenven = () => {
     <div style={{ height: '450px' }}>
       <div
         id="registerSevenChart"
-        style={{ width: '800px', height: '400px' }}
+        style={{ width: '1400px', height: '400px' }}
       ></div>
     </div>
   );

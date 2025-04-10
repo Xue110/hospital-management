@@ -5,6 +5,7 @@ import { getDoctorList } from '../../../apis/doctor';
 import FormDoctor from './Form';
 import Search from './Search';
 import TableComponent from './Table';
+import { useSelector } from 'react-redux';
 const Doctor = () => {
   const [data, setData] = useState<any[]>([
     {
@@ -23,6 +24,7 @@ const Doctor = () => {
       userId:1,
     },
   ]);
+  const userInfo = useSelector((state: any) => state.user.userInfo);
   const [open, setOpen] = useState<number>(0);
   const [pagination, setPagination] = useState({
     page: 1,
@@ -49,7 +51,7 @@ const Doctor = () => {
       pageSize: pagination.pageSize,
       name: filterData?.name,
       departmentId: filterData?.departmentId,
-      hospitalId: filterData?.hospitalId,
+      hospitalId: userInfo.roleId === 2 ? userInfo.id : filterData.hospitalId,
     };
     const res = await getDoctorList(data);
     setData(res.data.records);

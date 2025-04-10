@@ -65,6 +65,8 @@ const fetchUserInfo = () => {
   return async (dispatch: AppDispatch) => {
       const res = await getProfileAPI()
       dispatch(setUserInfo(res.data))
+      localStorage.setItem('id', res.data.userId)
+      localStorage.setItem('username', res.data.name)
   }
 }
 

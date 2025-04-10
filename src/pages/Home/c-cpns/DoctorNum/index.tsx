@@ -2,22 +2,9 @@ import { useEffect } from 'react';
 import './index.scss';
 import * as echarts from 'echarts';  // 引入 ECharts
 
-const DoctorNum = () => {
+const DoctorNum = (props: any) => {
   // 假设的数据：吉林省内医院及其医生数量
-  const hospitalData = [
-    { name: '长春市第一医院', doctors: 150 },
-    { name: '吉林大学第一医院', doctors: 200 },
-    { name: '长春市第二医院', doctors: 120 },
-    { name: '延边大学附属医院', doctors: 100 },
-    { name: '松原市人民医院', doctors: 80 },
-    { name: '松原市人民医院', doctors: 80 },
-    { name: '松原市人民医院', doctors: 80 },
-    { name: '松原市人民医院', doctors: 80 },
-    { name: '松原市人民医院', doctors: 80 },
-    { name: '松原市人民医院', doctors: 80 },
-    { name: '松原市人民医院', doctors: 80 },
-    { name: '松原市人民医院', doctors: 80 },
-  ];
+  const hospitalData = props.number
 
   useEffect(() => {
     // 获取图表的 DOM 容器
@@ -28,7 +15,7 @@ const DoctorNum = () => {
     const option = {
       title: {
         text: '吉林省各医院医生数量',
-        subtext: '数据来源：假设数据',
+        subtext: '数据来源：李欣雨',
         left: 'center',
       },
       tooltip: {
@@ -36,7 +23,7 @@ const DoctorNum = () => {
       },
       xAxis: {
         type: 'category',
-        data: hospitalData.map(item => item.name),  // 医院名称
+        data: hospitalData.map((item:any) => item.name),  // 医院名称
         axisLabel: {
           rotate: 30,  // 使医院名称倾斜，避免重叠
         },
@@ -47,7 +34,7 @@ const DoctorNum = () => {
       },
       series: [
         {
-          data: hospitalData.map(item => item.doctors),  // 医生数量
+          data: hospitalData.map((item:any) => item.value),  // 医生数量
           type: 'bar',  // 使用柱状图
           itemStyle: {
             color: '#4CAF50',  // 设置柱子颜色

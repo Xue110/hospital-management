@@ -44,7 +44,6 @@ const App: React.FC = () => {
     }else {
       localStorage.removeItem('userForm'); // 如果没有勾选“记住我”，移除 localStorage 中的数据
     }
-    // 在这里可以添加登录逻辑
     await dispatch(fetchLogin(values));
     //1.跳转到首页
     navigate('/home');

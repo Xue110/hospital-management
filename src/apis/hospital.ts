@@ -193,3 +193,124 @@ export const deleteWard = (id: number) => {
     method: "DELETE",
   });
 }
+
+// 获取医院排班管理记录
+export const getScheduleList = (data: any) => {
+  return request({
+    url: '/admin/schedule/limit',
+    method: "POST",
+    data
+  });
+}
+
+// 新增排班
+export const addSchedule = (data: any) => {
+  return request({
+    url: "/admin/schedule/add",
+    method: "POST",
+    data
+  });
+}
+
+// 删除排班
+export const deleteSchedule = (id: number) => {
+  return request({
+    url: `/admin/schedule/delete/${id}`,
+    method: "DELETE",
+  });
+}
+
+// 修改排班
+export const updateSchedule = (data: any) => {
+  return request({
+    url: "/admin/schedule/update",
+    method: "PUT",
+    data
+  });
+}
+
+// 删除全部排班
+export const deleteScheduleAll = (ids:number[]) => {
+  return request({
+    url: `/admin/schedule/batchDelete?ids=${ids}`,
+    method: "DELETE",
+  });
+}
+
+// 获取预约记录
+export const getAppointmentList = (data: any) => {
+  return request({
+    url: `/admin/registration/page?page=${data.page}&pageSize=${data.pageSize}`,
+    method: "GET"
+  });
+}
+// 添加预约记录
+export const addAppointment = (data: any) => {
+  return request({
+    url: "/admin/registration/add",
+    method: "POST",
+    data
+  });
+}
+// 修改预约记录
+export const updateAppointment = (data: any) => {
+  return request({
+    url: "/admin/registration/update",
+    method: "PUT",
+    data
+  });
+}
+// 删除单个预约记录
+export const deleteAppointment = (id: number) => {
+  return request({
+    url: `/admin/registration/delete/${id}`,
+    method: "DELETE",
+  });
+}
+// 批量删除预约记录
+export const deleteAppointmentBatch = (ids: number[]) => {
+  return request({
+    url: `/admin/registration/batchDelete?ids=${ids}`,
+    method: "DELETE",
+  });
+}
+
+// 获取医生排班记录
+export const getDoctorScheduleList = (data: any) => {
+  return request({
+    url: '/admin/schedules/page',
+    method: "POST",
+    data
+  });
+}
+// 添加医生排班记录
+export const addDoctorSchedule = (data: any) => {
+  return request({
+    url: "/admin/schedules/add",
+    method: "POST",
+    data
+  });
+}
+// 删除单个医生排班记录
+export const deleteDoctorSchedule = (id: number) => {
+  return request({
+    url: `/admin/schedules/delete/${id}`,
+    method: "DELETE",
+  });
+}
+
+// 批量删除医生排班记录
+export const deleteDoctorScheduleBatch = (ids: number[]) => {
+  return request({
+    url: `/admin/schedules/batchDelete?ids=${ids}`,
+    method: "DELETE",
+  });
+}
+// 修改医生排班记录
+export const updateDoctorSchedule = (data: any) => {
+  return request({
+    url: "/admin/schedules/update",
+    method: "PUT",
+    data
+  });
+}

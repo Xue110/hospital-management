@@ -3,6 +3,7 @@ import './index.scss';
 import { Button, Col, Form, Input, Row, Select } from 'antd';
 import { useSelector } from 'react-redux';
 const Search = (props: any) => {
+  const hospitalData = useSelector((state: any) => state.hospital.hospitalList);
   const [form] = Form.useForm();
   const userInfo = useSelector((state: any) => state.user.userInfo);
   // 重置表单
@@ -13,9 +14,6 @@ const Search = (props: any) => {
   // 搜索
   const handleSearch = () => {
     form.validateFields().then((values) => {
-      if(userInfo.roleId === 1){
-        values.hospitalId = userInfo.hospitalId
-      }
       props.onFilterChange(values);
     });
   };
@@ -35,7 +33,7 @@ const Search = (props: any) => {
             <Col span={7}>
               <Form.Item name="hospitalId" label="医院">
                 <Select placeholder="请选择医院">
-                  {props.hospitalCounts.map((item: any) => {
+                  {hospitalData.hospitalCounts.map((item: any) => {
                     return (
                       <Select.Option key={item.id} value={item.id}>
                         {item.name}

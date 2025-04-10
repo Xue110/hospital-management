@@ -16,16 +16,16 @@ const Search = (props: any) => {
   // 搜索
   const handleSearch = () => {
     form.validateFields().then((values) => {
-      if (userInfo.roleId === 2) {
-        values.hospitalId = userInfo.hospitalId;
+      if (values.time && values.time.length > 0) {
+        const [startTime, endTime] = values.time;
+        values.startTime = startTime.format('YYYY-MM-DD HH:mm:ss');
+        values.endTime = endTime.format('YYYY-MM-DD HH:mm:ss');
       }
-      const [startTime,endTime] = values.time;
-      values.startTime = startTime.format('YYYY-MM-DD HH:mm:ss')
-      values.endTime = endTime.format('YYYY-MM-DD HH:mm:ss')
+      console.log(values);
       props.onFilterChange(values);
     });
   };
-  const options = hospitalData.userCounts.map(
+  const options = hospitalData.patientCounts.map(
     (patient: { id: number; name: string }) => ({
       value: patient.id,
       label: patient.name,
@@ -39,7 +39,7 @@ const Search = (props: any) => {
             <Row justify="space-between" style={{ width: '100%' }}>
               {/* 患者名输入框 */}
               <Col span={7}>
-                <Form.Item name="userId" label="患者名">
+                <Form.Item name="patientId" label="患者名">
                   <Select
                     showSearch
                     placeholder="请输入患者名"
@@ -183,9 +183,7 @@ const Search = (props: any) => {
               {/* 预约时间段选择框 */}
               <Col span={8}>
                 <Form.Item name="time" label="预约时间段">
-                  <RangePicker
-                    showTime
-                  />
+                  <RangePicker showTime />
                 </Form.Item>
               </Col>
               <Col span={2}></Col>

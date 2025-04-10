@@ -67,7 +67,7 @@ const FormDoctor = (props: any) => {
           values.hospitalId = values.doctorId[0];
           values.doctorId = values.doctorId[1];
         } else {
-          values.hospitalId = userInfo.hospitalId;
+          values.hospitalId = userInfo.id;
         }
         values.roomsId = values.room[0];
         values.bedId = values.room[1];

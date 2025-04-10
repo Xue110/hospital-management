@@ -14,9 +14,6 @@ const Search = (props: any) => {
   // 搜索
   const handleSearch = () => {
     form.validateFields().then((values) => {
-      if (userInfo.roleId === 2) {
-        values.hospitalId = userInfo.hospitalId;
-      }
       props.onFilterChange(values);
     });
   };

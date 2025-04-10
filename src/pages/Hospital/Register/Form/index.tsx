@@ -74,15 +74,14 @@ const FormDoctor = (props: any) => {
           values.hospitalId = values.doctorId[0];
           values.doctorId = values.doctorId[1];
         } else {
-          values.hospitalId = userInfo.hospitalId;
+          values.hospitalId = userInfo.id;
         }
-        if (
-          (patientData && Object.keys(patientData).length > 0) ||
-          !values.patientId
-        ) {
-          values.name = patientData.name;
-          values.gender = patientData.gender;
-          values.birth = patientData.birth.format('YYYY-MM-DD');
+        if (!values.userId) {
+          values.name = patientData.name || ''; // 防止 patientData.name 为空
+          values.gender = patientData.gender || ''; // 防止 patientData.gender 为空
+          values.birth = patientData.birth
+            ? patientData.birth.format('YYYY-MM-DD')
+            : '';
         }
         const [startTime, endTime] = values.time || []; // 获取时间范围
         values.startTime = startTime.format('YYYY-MM-DD HH:mm:ss');
@@ -109,7 +108,7 @@ const FormDoctor = (props: any) => {
     setModal(false);
     patientForm.resetFields();
   };
-  const options = hospitalData.userCounts.map(
+  const options = hospitalData.patientCounts.map(
     (patient: { id: number; name: string }) => ({
       value: patient.id,
       label: patient.name,
@@ -250,6 +249,8 @@ const FormDoctor = (props: any) => {
                     style={{ width: '50%' }}
                     placeholder="请输入患者名"
                     optionFilterProp="label"
+                    value={form.getFieldValue('userId')}
+                    onChange={(value) => form.setFieldsValue({ userId: value })}
                     filterSort={(optionA, optionB) => {
                       const labelA =
                         typeof optionA.label === 'string'

@@ -28,10 +28,6 @@ export type TableProps = {
   onTableChange: any;
   deleteNum: number;
   refresh: () => void;
-  userCounts:Doctor[]
-  patientCounts:Doctor[]
-  hospitalCounts:Hospital[]
-  doctorCounts:Doctor[]
   paginationCount:any
 };
 export type Doctor = {
